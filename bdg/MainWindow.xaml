@@ -1,0 +1,98 @@
+﻿<Window x:Class="bdg.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        mc:Ignorable="d"
+        Title="Homemade Financier" Height="600" Width="1000">
+    <Window.Resources></Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="5*"></RowDefinition>
+            <RowDefinition Height="50*"></RowDefinition>
+            <RowDefinition Height="5*"></RowDefinition>
+            <RowDefinition Height="30*"></RowDefinition>
+            <RowDefinition Height="3*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="220"></ColumnDefinition>
+            <!--<ColumnDefinition Width="46*"></ColumnDefinition>-->
+            <ColumnDefinition Width="220"/>
+            <ColumnDefinition Width="40"></ColumnDefinition>
+            <ColumnDefinition Width="300*"></ColumnDefinition>
+            <ColumnDefinition Width="201*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <DataGrid x:Name="DataGridCrt" HorizontalAlignment="Left" Margin="14,0,0,0" Grid.Row="3" Grid.Column="0" VerticalAlignment="Top" ItemsSource="{Binding}" AutoGenerateColumns="False" SelectionChanged="dataGridCrt_SelectionChanged" Width="206" CellEditEnding="dataGridCrt_CellEditEnding" GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="Gray">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Binding="{Binding ctg_id}" Visibility="Collapsed" />
+                <DataGridTextColumn Header="Категория" Binding="{Binding ctg_nm}" Width="180"/>
+            </DataGrid.Columns>
+            <DataGrid.ContextMenu>
+                <ContextMenu Name="CtgMenu">
+                    <MenuItem Name="CtgNew" Header="Добавить" Click="CtgNew_Click"/>
+                    <MenuItem Name="CtgDel" Header="Удалить" Click="CtgDel_Click"></MenuItem>
+                </ContextMenu>
+            </DataGrid.ContextMenu>
+        </DataGrid>
+        <DataGrid x:Name="DataGridPrj" HorizontalAlignment="Left" Margin="230,0,0,0" Grid.Row="3" Grid.Column="0" VerticalAlignment="Top" ItemsSource="{Binding}" AutoGenerateColumns="False" SelectionChanged="dataGridPrj_SelectionChanged" Width="206" GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="Gray" Grid.ColumnSpan="2" CellEditEnding="DataGridPrj_CellEditEnding">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Binding="{Binding prj_id}" Visibility="Collapsed" />
+                <DataGridTextColumn Header="Проект" Binding="{Binding prj_nm}"  Width="180" />
+                <DataGridTextColumn Header="ctg_id" Binding="{Binding ctg_id}"  Visibility="Collapsed" />
+                <DataGridTextColumn Header="Цвет" Binding="{Binding color}"  Visibility="Collapsed" />
+            </DataGrid.Columns>
+                <DataGrid.RowStyle>
+                <Style TargetType="{x:Type DataGridRow}">
+                    <Style.Triggers>
+                        <!--<DataTrigger Binding="{Binding ctg_id}" Value="0" >
+                            <Setter Property="Background" Value="White"></Setter>
+                        </DataTrigger>-->
+                        <DataTrigger Binding="{Binding color}" Value="1">
+                            <Setter Property="Background" Value="Orange"></Setter>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.RowStyle>
+            <DataGrid.ContextMenu>
+                <ContextMenu Name="PrjMenu">
+                    <MenuItem Name="PrjNew" Header="Добавить" Click="PrjNew_Click" />
+                    <MenuItem Name="PrjDel" Header="Удалить" Click="PrjDel_Click" ></MenuItem>
+                </ContextMenu>
+            </DataGrid.ContextMenu>
+        </DataGrid>
+        <DataGrid x:Name="DataGridCsh" HorizontalAlignment="Left" Margin="10,0,10,0" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="5" VerticalAlignment="Top" ItemsSource="{Binding}" AutoGenerateColumns="False" SelectionChanged="dataGridCsh_SelectionChanged" HorizontalGridLinesBrush="Gray" VerticalGridLinesBrush="Gray" MinHeight="260">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Binding="{Binding csh_id}" Visibility="Collapsed" />
+                <DataGridTextColumn Header="Дата" Binding="{Binding date}" Width="70"/>
+                <DataGridTextColumn Header="stt_id_from" Binding="{Binding stt_id_from}" Visibility="Collapsed"/>
+                <DataGridTextColumn Header="От куда" Binding="{Binding from}" Width="20*"/>
+                <DataGridTextColumn Header="stt_id_to" Binding="{Binding stt_id_to}" Visibility="Collapsed"/>
+                <DataGridTextColumn Header="Куда" Binding="{Binding to}" Width="20*"/>
+                <DataGridTextColumn Header="Сумма" Binding="{Binding csh_sum, StringFormat={}{0:C}}" Width="100"/>
+                <!--<DataGridTextColumn Header="Сумма" Binding="{Binding csh_sum, StringFormat=\{0:N\}}" Width="10*" />-->
+                <DataGridTextColumn Header="План" Binding="{Binding csh_pln}" Width="50"/>
+                <DataGridTextColumn Header="Примечение" Binding="{Binding csh_note}" Width="20*"/>
+            </DataGrid.Columns>
+            <DataGrid.ContextMenu>
+                <ContextMenu Name="CshMenu">
+                    <MenuItem Name="CshEdit" Header="Изменть" Click="CshEdit_Click"></MenuItem>
+                    <MenuItem Name="CshDel" Header="Удалить" Click="CshDel_Click" ></MenuItem>
+                </ContextMenu>
+            </DataGrid.ContextMenu>
+        </DataGrid>
+        <Button x:Name="ButtonAdd" Content="Добавить" HorizontalAlignment="Left" Height="21" Margin="10,157,0,0" Grid.Row="3" Grid.Column="3" VerticalAlignment="Top" Width="72" Click="buttonAdd_Click" TabIndex="5"/>
+        <!--<Button x:Name="buttonTo" Content="Куда" Grid.Row="3" Grid.Column="2" HorizontalAlignment="Left" Margin="10,40,0,0" VerticalAlignment="Top" Width="75"/>-->
+        <TextBox x:Name="TextBoxSum" Grid.Column="3" Grid.Row="3"  HorizontalAlignment="Left" Height="23" Margin="10,68,0,0" TextWrapping="Wrap" Text="0.00" VerticalAlignment="Top" Width="75" LostFocus="textBoxSum_LostFocus" TextChanged="textBoxSum_TextChanged" TabIndex="3" GotFocus="TextBoxSum_GotFocus"/>
+        <DatePicker x:Name="DateCsh" Grid.Column="3" Grid.Row="3" HorizontalAlignment="Left" Margin="10,96,0,0" VerticalAlignment="Top" SelectedDate="{x:Static sys:DateTime.Now}" Height="24" Width="126" TabIndex="3" />
+        <TextBox x:Name="TextBoxFrom" Grid.Column="3" Grid.Row="3" HorizontalAlignment="Left" Height="23" Margin="10,10,0,0" TextWrapping="Wrap" Text="Откуда" VerticalAlignment="Top" Width="230" GotFocus="textBoxFrom_GotFocus" TextChanged="TextBoxFrom_TextChanged" TabIndex="1" IsReadOnly="True"/>
+        <TextBox x:Name="TextBoxTo" Grid.Column="3" Grid.Row="3" HorizontalAlignment="Left" Height="23" Margin="10,40,0,0" TextWrapping="Wrap" Text="Куда" VerticalAlignment="Top" Width="230" TextChanged="textBoxTo_TextChanged" GotFocus="textBoxTo_GotFocus" TabIndex="2" IsReadOnly="True"/>
+        <TextBox x:Name="TextBoxSumFrom" Grid.Column="3" Grid.Row="3" HorizontalAlignment="Left" Height="23" Margin="250,10,0,0" VerticalAlignment="Top" Width="160" BorderBrush="{x:Null}" />
+        <TextBox x:Name="TextBoxSumTo" Grid.Column="3" Grid.Row="3" HorizontalAlignment="Left" Height="23" Margin="250,40,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="160" BorderBrush="{x:Null}"/>
+        <TextBox x:Name="TextBoxFromTo" HorizontalAlignment="Left" Height="23" Margin="10,5,0,0" Grid.Row="2"
+                 Grid.Column="0" TextWrapping="NoWrap" Text="Откуда:" VerticalAlignment="Top" Width="120" BorderBrush="{x:Null}"/>
+        <TextBox x:Name="TextBoxComment" Grid.Column="3" HorizontalAlignment="Left" Height="23" Margin="10,129,0,0" Grid.Row="3" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="376" Grid.ColumnSpan="2" TabIndex="4"/>
+        <CheckBox x:Name="CheckBoxPln" Content="План" Grid.Column="3" HorizontalAlignment="Left" Margin="145,96,0,0" Grid.Row="3" VerticalAlignment="Top" Height="15" Width="48"/>
+    </Grid>
+</Window>
+
