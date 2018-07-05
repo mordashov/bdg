@@ -19,20 +19,10 @@ namespace bdg
     {
         private db3work db3 = new db3work();
 
-
         public MainWindow()
         {
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("ru-Ru");
-            Thread.CurrentThread.CurrentUICulture = new CultureInfo("ru-Ru");
-            LanguageProperty.OverrideMetadata(typeof(FrameworkElement), new FrameworkPropertyMetadata(
-            XmlLanguage.GetLanguage(CultureInfo.CurrentCulture.IetfLanguageTag)));
-
             InitializeComponent();
-            CrtFill();
-            PrjFill();
-            CshFill();
         }
-
         
         private void CrtFill() //Заполняю DataGrid с критериями
         {
@@ -44,7 +34,6 @@ namespace bdg
             ";
             DataTable table = db3.SelectSql(sql);
             DataGridCrt.DataContext = table.DefaultView;
-
         }
 
         private void PrjFill() //Заполняю DataGrid с проектами (подкретерии)
@@ -81,7 +70,7 @@ namespace bdg
                 sql = $@"SELECT 0-COUNT([stt_id_from]) as stt_id_from
                 FROM[csh]
                 WHERE [{sttId}] = {ctgTableStt}";
-                string counSttId = db3.ScalarSQL(sql).PadLeft(5, '0');
+                string counSttId = db3.ScalarSql(sql).PadLeft(5, '0');
 
                 sql = $@"
                 SELECT prj.[prj_id]
@@ -127,37 +116,55 @@ namespace bdg
             ButtonAdd.Content = "Добавить";
         }
 
-        private void dataGridCrt_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void DataGridCrtSelect() //Измененние выбора в критериях
         {
-            DataRowView drv = (DataRowView) e.AddedItems[0];
-
-            db3.CtgId = drv.Row.ItemArray[0].ToString();
-            db3.CtgText = drv.Row.ItemArray[1].ToString();
+            DataRowView drv = (DataRowView)DataGridCrt.SelectedItem;
+            db3.CtgId = drv[0].ToString();
+            db3.CtgText = drv[1].ToString();
             db3.PrjId = "%";
             db3.PrjText = null;
 
             ButtonAddVisible();
 
             PrjFill();
-            FillFromTo();
+            RestExpenditure();
 
         }
 
-        private void dataGridPrj_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void DataGridCrt_MouseUp(object sender, MouseButtonEventArgs e)
         {
+            DataGridCrtSelect();
+        }
 
+        private void DataGridCrt_KeyUp(object sender, KeyEventArgs e)
+        {
+            DataGridCrtSelect();
+        }
+
+        private void DataGridPrjSelect() //Изменение выбора в проектах
+        {
+            DataRowView drv = (DataRowView)DataGridPrj.SelectedItem;
             try
             {
-                DataRowView drv = (DataRowView)e.AddedItems[0];
-                db3.PrjId = drv.Row.ItemArray[0].ToString();
-                db3.PrjText = drv.Row.ItemArray[1].ToString();
-                FillFromTo();
+                db3.PrjId = drv.Row[0].ToString();
+                db3.PrjText = drv.Row[1].ToString();
+                RestExpenditure();
             }
             catch (Exception)
             {
                 db3.PrjId = "%";
                 db3.PrjText = null;
             }
+        }
+
+        private void DataGridPrj_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            DataGridPrjSelect();
+        }
+
+        private void DataGridPrj_KeyUp(object sender, KeyEventArgs e)
+        {
+            DataGridPrjSelect();
         }
 
         private void textBoxTo_GotFocus(object sender, RoutedEventArgs e)
@@ -171,7 +178,7 @@ namespace bdg
             db3.PrjIdTo = "%";
         }
 
-        private void FillFromTo() //Заполнение Откуда, Куда и расчет остатка по статье
+        private void RestExpenditure() //Заполнение Откуда, Куда и расчет остатка по статье
         {
             if (TextBoxFromTo.Text == "Откуда:")
             {
@@ -192,7 +199,7 @@ namespace bdg
                       INNER JOIN prj ON prj.prj_id = stt.prj_id
                       WHERE stt.ctg_id = {db3.CtgIdFrom} AND stt.prj_id like '{db3.PrjIdFrom}'
                       GROUP BY ctg.ctg_id";
-                double sumDt = double.Parse(db3.ScalarSQL(sql));
+                double sumDt = double.Parse(db3.ScalarSql(sql));
                 //Кт
                 sql = $@"
                     SELECT 
@@ -203,7 +210,7 @@ namespace bdg
                       INNER JOIN prj ON prj.prj_id = stt.prj_id
                       WHERE stt.ctg_id = {db3.CtgIdFrom} AND stt.prj_id like '{db3.PrjIdFrom}'
                       GROUP BY ctg.ctg_id";
-                double sumKt = double.Parse(db3.ScalarSQL(sql));
+                double sumKt = double.Parse(db3.ScalarSql(sql));
                 //Остаток по статье (категоря / проект)
                 double sum = sumDt - sumKt;
                 TextBoxSumFrom.Text = $"{sum:C}";
@@ -233,7 +240,7 @@ namespace bdg
                       INNER JOIN prj ON prj.prj_id = stt.prj_id
                       WHERE stt.ctg_id = {db3.CtgIdTo} AND stt.prj_id like '{db3.PrjIdTo}'
                       GROUP BY ctg.ctg_id";
-                double sumDt = double.Parse(db3.ScalarSQL(sql));
+                double sumDt = double.Parse(db3.ScalarSql(sql));
                 //Кт
                 sql = $@"
                     SELECT 
@@ -244,11 +251,13 @@ namespace bdg
                       INNER JOIN prj ON prj.prj_id = stt.prj_id
                       WHERE stt.ctg_id = {db3.CtgIdTo} AND stt.prj_id like '{db3.PrjIdTo}'
                       GROUP BY ctg.ctg_id";
-                double sumKt = double.Parse(db3.ScalarSQL(sql));
+                double sumKt = double.Parse(db3.ScalarSql(sql));
                 //Остаток по статье (категоря / проект)
                 double sum = sumDt - sumKt;
                 TextBoxSumTo.Text = $"{sum:C}";
             }
+
+            ButtonAddVisible(); //Проверяю какой должна быть кнопка активной или нет
         }
 
         private void buttonAdd_Click(object sender, RoutedEventArgs e) //Добавление/изменение данных в csh
@@ -314,6 +323,7 @@ namespace bdg
             }
             
         }
+
         private string  SttInsert(string crtId, string prjId) //Добавление новой статьи
         {
             // Проверка наличия связки категори и проекта в stt
@@ -322,7 +332,7 @@ namespace bdg
                 FROM stt
                 WHERE ctg_id = {crtId} AND prj_id = {prjId};
             ";
-            string sttId = db3.ScalarSQL(sqlSttId);
+            string sttId = db3.ScalarSql(sqlSttId);
             MessageBoxResult msg = MessageBoxResult.No;
             if (sttId == "0")
                 msg = MessageBox.Show("Добавить новую связку Категрия-проект?", "", MessageBoxButton.YesNo);
@@ -341,7 +351,7 @@ namespace bdg
                 }
             }
 
-            return db3.ScalarSQL(sqlSttId);
+            return db3.ScalarSql(sqlSttId);
 
         }
 
@@ -397,7 +407,7 @@ namespace bdg
                     case "prj_from_nm":
                         db3.PrjText = fieldValue;
                         TextBoxFromTo.Text = "Откуда:";
-                        FillFromTo();
+                        RestExpenditure();
                         break;
                     case "ctg_to":
                         db3.CtgId = fieldValue;
@@ -411,7 +421,7 @@ namespace bdg
                     case "prj_to_nm":
                         db3.PrjText = fieldValue;
                         //TextBoxFromTo.Text = "Куда:";
-                        FillFromTo();
+                        RestExpenditure();
                         //TextBoxFromTo.Text = "Откуда:";
                         break;
                 }
@@ -467,6 +477,7 @@ namespace bdg
                 CshFill();
             }
         }
+
         private void CtgDel_Click(object sender, RoutedEventArgs e)
         {
             DataRowView dataRow = (DataRowView)DataGridCrt.SelectedItem;
@@ -482,7 +493,7 @@ namespace bdg
               WHERE [ctg].[ctg_id] = {ctgId}
               GROUP BY csh_from.stt_id_from
               ;";
-            string rowsCount = db3.ScalarSQL(sql);
+            string rowsCount = db3.ScalarSql(sql);
             if (rowsCount == "0")
             {
                 //Удаление связки в stt
@@ -528,7 +539,7 @@ namespace bdg
               WHERE [prj].[prj_id] = {prjId}
               GROUP BY csh_from.stt_id_from
               ;";
-            string rowsCount = db3.ScalarSQL(sql);
+            string rowsCount = db3.ScalarSql(sql);
             if (rowsCount == "0")
             {
                 //Удаление связки в stt
@@ -560,22 +571,36 @@ namespace bdg
 
         private void ButtonAddVisible()
         {
-            ButtonAdd.IsEnabled = db3.PrjIdFrom != "%" && db3.PrjIdTo != "%";
+            try
+            {
+                if (db3.PrjIdFrom != "%" && db3.PrjIdTo != "%")
+                {
+                    ButtonAdd.IsEnabled = false;
+                }
+                if (db3.PrjIdFrom == null && db3.PrjIdTo == null)
+                {
+                    ButtonAdd.IsEnabled = false;
+                }
+            }
+            catch (Exception)
+            {
+                // ignored
+            }
         }
         private void TextBoxFrom_TextChanged(object sender, TextChangedEventArgs e)
         {
-            ButtonAddVisible();
+            //ButtonAddVisible();
         }
         private void textBoxTo_TextChanged(object sender, TextChangedEventArgs e)
         {
-            ButtonAddVisible();
+            //ButtonAddVisible();
         }
 
         private void DataGridPrj_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
             TextBox newValue = e.EditingElement as TextBox;
             string oldValue = db3.PrjText;
-            if (newValue != null && newValue.Text != oldValue)
+            if ( string.IsNullOrEmpty(newValue.Text) && newValue.Text != oldValue)
             {
                 string id = ((DataRowView)DataGridPrj.SelectedItem).Row["prj_id"].ToString();
                 string nm = ((DataRowView)DataGridPrj.SelectedItem).Row["prj_nm"].ToString();
@@ -611,5 +636,20 @@ namespace bdg
             TextBoxComment.Text = cshComment;
         }
 
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("ru-Ru");
+            Thread.CurrentThread.CurrentUICulture = new CultureInfo("ru-Ru");
+            LanguageProperty.OverrideMetadata(typeof(FrameworkElement), new FrameworkPropertyMetadata(
+            XmlLanguage.GetLanguage(CultureInfo.CurrentCulture.IetfLanguageTag)));
+            //Заполняю критерии
+            CrtFill();
+            //Заполняю проекты
+            PrjFill();
+            //Заполняю основную таблицу
+            CshFill();
+        }
+
+        
     }
 }

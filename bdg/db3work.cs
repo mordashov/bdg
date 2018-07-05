@@ -25,12 +25,11 @@ namespace bdg
         public string CshId { get; set; } // ID таблицы с расходами
         public string SttIdFrom { get; set; } // Статья расходов (откуда)
         public string SttIdTo { get; set; } // Статья расходов (куда)
+
         public SQLiteConnection ConnectDb3()
         {
+            string bdg = Environment.CurrentDirectory + @"\bdg.db3";
 
-            string bdg;
-            bdg = Environment.CurrentDirectory + @"\bdg.db3";
-            Debug.Print(bdg);
             if (!File.Exists(bdg))
             {
                 MessageBox.Show(
@@ -39,24 +38,21 @@ namespace bdg
                     Environment.CurrentDirectory);
                 Environment.Exit(0);
             }
-            //MessageBox.Show(bdg);
-            //bdg = "D:\\DropBox\\Base\\bdg.db3";
-            //bdg = "C:\\Users\\ThinkPad\\Documents\\Dropbox\\Base\\bdg.db3";
+
             string strConnect = $@"Data Source={bdg}; Version=3;";
             SQLiteConnection conn = new SQLiteConnection(strConnect);
+
             try
             {
                 conn.Open();
             }
             catch (SQLiteException ex)
             {
-                //Console.WriteLine(ex.Message);
                 MessageBox.Show(ex.Message);
                 Environment.Exit(0);
             }
             return conn;
         }
-
         public void RunSql(string sql)
         {
             SQLiteConnection conn = ConnectDb3();
@@ -76,7 +72,7 @@ namespace bdg
             table.Load(reader);
             return table;
         }
-        public string ScalarSQL(string sql)
+        public string ScalarSql(string sql)
         {
             SQLiteConnection conn = ConnectDb3();
             SQLiteCommand cmd = new SQLiteCommand(conn);
