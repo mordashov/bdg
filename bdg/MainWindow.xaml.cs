@@ -19,6 +19,62 @@ namespace bdg
     {
         private db3work db3 = new db3work();
 
+        private string _ctgId; //ID Каталога
+        public string CtgId { get => _ctgId; set => _ctgId = value; }
+
+        private string _ctgTxt; //Наименование каталога
+        public string CtgTxt { get => _ctgTxt; set => _ctgTxt = value; }
+
+        private string _prjId; //ID проекта
+        public string PrjId { get => _prjId; set => _prjId = value; }
+
+        private string _prjTxt; //Наименование каталога
+        public string PrjTxt { get => _prjTxt; set => _prjTxt = value; }
+
+        private string _sttFrom;
+        public string SttFrom { get => _sttFrom; set => _sttFrom = value; }
+
+        private string _sttTo;
+        public string SttTo { get => _sttTo; set => _sttTo = value; }
+
+        private void GetStt(TextBox activeTextBox, DataGrid activeDataGrid)
+        {
+            DataRowView drv = (DataRowView)activeDataGrid.SelectedItem;
+
+            switch (activeDataGrid.Name)
+            {
+                case "DataGridCrt":
+                    _ctgId = drv[0].ToString();
+                    _ctgTxt = drv[1].ToString();
+                    break;
+                case "DataGridPrj":
+                    _prjId = drv[0].ToString();
+                    _prjTxt = drv[1].ToString();
+                break;
+            }
+
+            string nameStt = "";
+            string findNameStt = "";
+            switch (activeTextBox.Name)
+            {
+                case "TextBoxFrom":
+                    findNameStt = "stt_id_from";
+                    nameStt = "stt_id_to";
+                    break;
+                case "TextBoxTo":
+                    findNameStt = "stt_id_to";
+                    nameStt = "stt_id_from";
+                    break;
+            }
+
+            FillProjects(_ctgId, findNameStt, nameStt);
+
+            db3.PrjId = "%";
+            db3.PrjText = null;
+
+
+        }
+
         public MainWindow()
         {
             InitializeComponent();
@@ -34,6 +90,25 @@ namespace bdg
             ";
             DataTable table = db3.SelectSql(sql);
             DataGridCrt.DataContext = table.DefaultView;
+        }
+
+        private void FillProjects(string ctgId, string findNameStt, string nameStt)
+        {
+            string getSttIdSql = $"(SELECT stt_id FROM stt WHERE ctg_id = '{ctgId}' and prj_id = prj.prj_id)";
+
+            string countSttSql = $@"
+                (SELECT 0-COUNT({findNameStt}) as {findNameStt}
+                FROM [csh]
+                WHERE {nameStt} = '{getSttIdSql}')";
+            string sql = $@"
+                SELECT [prj_id]
+                      ,[prj_nm]
+                      ,'0' as ctg_id
+                      ,'0' as color  
+                      ,{countSttSql}
+                  FROM [prj]
+                  ORDER BY [prj_nm];
+                ";
         }
 
         private void PrjFill() //Заполняю DataGrid с проектами (подкретерии)
@@ -133,6 +208,7 @@ namespace bdg
 
         private void DataGridCrt_MouseUp(object sender, MouseButtonEventArgs e)
         {
+            GetStt(TextBoxFrom, (DataGrid)sender);
             DataGridCrtSelect();
         }
 
