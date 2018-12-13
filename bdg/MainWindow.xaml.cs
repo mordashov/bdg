@@ -95,20 +95,12 @@ namespace bdg
         private void FillProjects(string ctgId, string findNameStt, string nameStt)
         {
             string getSttIdSql = $"(SELECT stt_id FROM stt WHERE ctg_id = '{ctgId}' and prj_id = prj.prj_id)";
+            string countSttSql = $"(SELECT COUNT({findNameStt}) as stt FROM [csh] WHERE {nameStt} = {getSttIdSql})";
+            string sql = $"SELECT [prj_id], [prj_nm], {countSttSql} as ctg_id, case {countSttSql} when 0 then 0 else 1 end  as color FROM [prj] ORDER BY [prj_nm];";
+            DataTable table = db3.SelectSql(sql);
 
-            string countSttSql = $@"
-                (SELECT 0-COUNT({findNameStt}) as {findNameStt}
-                FROM [csh]
-                WHERE {nameStt} = '{getSttIdSql}')";
-            string sql = $@"
-                SELECT [prj_id]
-                      ,[prj_nm]
-                      ,'0' as ctg_id
-                      ,'0' as color  
-                      ,{countSttSql}
-                  FROM [prj]
-                  ORDER BY [prj_nm];
-                ";
+            DataView tableSort = new DataView(table) { Sort = "ctg_id DESC, prj_nm ASC" };
+            DataGridPrj.DataContext = tableSort;
         }
 
         private void PrjFill() //Заполняю DataGrid с проектами (подкретерии)
@@ -209,7 +201,7 @@ namespace bdg
         private void DataGridCrt_MouseUp(object sender, MouseButtonEventArgs e)
         {
             GetStt(TextBoxFrom, (DataGrid)sender);
-            DataGridCrtSelect();
+            //DataGridCrtSelect();
         }
 
         private void DataGridCrt_KeyUp(object sender, KeyEventArgs e)
