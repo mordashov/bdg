@@ -37,43 +37,6 @@ namespace bdg
         private string _sttTo;
         public string SttTo { get => _sttTo; set => _sttTo = value; }
 
-        private void GetStt(TextBox activeTextBox, DataGrid activeDataGrid)
-        {
-            DataRowView drv = (DataRowView)activeDataGrid.SelectedItem;
-
-            switch (activeDataGrid.Name)
-            {
-                case "DataGridCrt":
-                    _ctgId = drv[0].ToString();
-                    _ctgTxt = drv[1].ToString();
-                    break;
-                case "DataGridPrj":
-                    _prjId = drv[0].ToString();
-                    _prjTxt = drv[1].ToString();
-                break;
-            }
-
-            string nameStt = "";
-            string findNameStt = "";
-            switch (activeTextBox.Name)
-            {
-                case "TextBoxFrom":
-                    findNameStt = "stt_id_from";
-                    nameStt = "stt_id_to";
-                    break;
-                case "TextBoxTo":
-                    findNameStt = "stt_id_to";
-                    nameStt = "stt_id_from";
-                    break;
-            }
-
-            FillProjects(_ctgId, findNameStt, nameStt);
-
-            db3.PrjId = "%";
-            db3.PrjText = null;
-
-
-        }
 
         public MainWindow()
         {
@@ -92,15 +55,67 @@ namespace bdg
             DataGridCrt.DataContext = table.DefaultView;
         }
 
-        private void FillProjects(string ctgId, string findNameStt, string nameStt)
+        private void GetStt(TextBox activeTextBox, DataGrid activeDataGrid)
         {
-            string getSttIdSql = $"(SELECT stt_id FROM stt WHERE ctg_id = '{ctgId}' and prj_id = prj.prj_id)";
-            string countSttSql = $"(SELECT COUNT({findNameStt}) as stt FROM [csh] WHERE {nameStt} = {getSttIdSql})";
-            string sql = $"SELECT [prj_id], [prj_nm], {countSttSql} as ctg_id, case {countSttSql} when 0 then 0 else 1 end  as color FROM [prj] ORDER BY [prj_nm];";
-            DataTable table = db3.SelectSql(sql);
+            // Получение stt_id_to либо stt_id_from
+            // stt_id_to - Статья куда заносится сумма
+            // stt_id_from - Статья откуда забирается сумма
+            // Параметры:
+            // TextBox activeTextBox - один из TextBox Откуда или Куда
+            // DataGrid activeDataGrid - DataGrid с категорией или DataGrid с проектом
 
-            DataView tableSort = new DataView(table) { Sort = "ctg_id DESC, prj_nm ASC" };
-            DataGridPrj.DataContext = tableSort;
+            DataRowView drv = (DataRowView)activeDataGrid.SelectedItem;
+
+            switch (activeDataGrid.Name)
+            {
+                case "DataGridCrt":
+                    _ctgId = drv[0].ToString();
+                    _ctgTxt = drv[1].ToString();
+                    break;
+                case "DataGridPrj":
+                    _prjId = drv[0].ToString();
+                    _prjTxt = drv[1].ToString();
+                    break;
+            }
+
+            string nameSttId = "";
+            switch (activeTextBox.Name)
+            {
+                case "TextBoxFrom":
+                    nameSttId = "stt_id_from";
+                    break;
+                case "TextBoxTo":
+                    nameSttId = "stt_id_to";
+                    break;
+            }
+
+            FillProjects(_ctgId, nameSttId);
+
+            //db3.PrjId = "%";
+            //db3.PrjText = null;
+        }
+
+        private void FillProjects(string ctgId, string nameSttId)
+        {
+            //Заполнения грида с проектами
+            //Параметры:
+            // ctgId - id категории
+            // nameSttId - имя поля stt_id_from либо stt_id_to
+
+            string subSql = $"SUM(CASE c.ctg_id WHEN {ctgId} THEN 1 ELSE 0 END)";
+            string sql = $@"
+                            SELECT p.prj_id, prj_nm, 
+                            {subSql} AS ctg_id,
+                            CASE {subSql} WHEN 0 THEN 0 ELSE 1 END AS color 
+                            FROM prj p
+                            LEFT JOIN stt s ON s.prj_id = p.prj_id
+                            LEFT JOIN ctg c ON c.ctg_id = s.ctg_id
+                            LEFT JOIN csh h ON h.{nameSttId} = s.stt_id
+                            GROUP BY p.prj_id, p.prj_nm
+                            ORDER BY {subSql} DESC, prj_nm;
+                            ";
+            DataTable table = db3.SelectSql(sql);
+            DataGridPrj.DataContext = table;
         }
 
         private void PrjFill() //Заполняю DataGrid с проектами (подкретерии)
@@ -186,14 +201,19 @@ namespace bdg
         private void DataGridCrtSelect() //Измененние выбора в критериях
         {
             DataRowView drv = (DataRowView)DataGridCrt.SelectedItem;
-            db3.CtgId = drv[0].ToString();
-            db3.CtgText = drv[1].ToString();
-            db3.PrjId = "%";
-            db3.PrjText = null;
+            _ctgId = drv[0].ToString();
+            _ctgTxt = drv[1].ToString();
+            _prjId = "%";
+            _prjTxt = null;
 
             ButtonAddVisible();
 
-            PrjFill();
+            //FillProjects(_ctgId, "stt_id_to");
+            TextBox tb = TextBoxFrom;
+            if (TextBoxTo.IsSelectionActive)
+                tb = TextBoxTo;
+            GetStt(tb, DataGridCrt);
+            //PrjFill();
             RestExpenditure();
 
         }
@@ -713,7 +733,7 @@ namespace bdg
             //Заполняю критерии
             CrtFill();
             //Заполняю проекты
-            PrjFill();
+            //PrjFill();
             //Заполняю основную таблицу
             CshFill();
         }
