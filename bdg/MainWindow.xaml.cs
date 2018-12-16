@@ -36,15 +36,21 @@ namespace bdg
         //_sttId[1] - хранит значение для stt_id_to
         private string[] _sttId = new string[2];
 
+        public string[] SttId
+        {
+            get
+            {
+               return _sttId;
+            }
+            set
+            {
+                _sttId = value;
+            } 
+        }
+
         //Для сохранения имени заполняемого поля (откуда/куда)
         private string _activeTextBox = "TextBoxFrom";
 
-
-        public MainWindow()
-        {
-            InitializeComponent();
-        }
-        
         private void CrtFill() //Заполняю DataGrid с критериями
         {
             string sql = @"
@@ -84,18 +90,31 @@ namespace bdg
                 case "DataGridCrt":
                     _ctgId = drv[0].ToString();
                     _ctgTxt = drv[1].ToString();
+                    ((TextBox)StackPanelEnter.FindName(_activeTextBox)).Text = _ctgTxt;
+                    _prjId = null;
+                    _prjTxt = null;
                     FillProjects(_ctgId, nameSttId);
                     break;
                 case "DataGridPrj":
                     _prjId = drv[0].ToString();
                     _prjTxt = drv[1].ToString();
-                    _sttId[i] = db3.ScalarSql($"SELECT stt_id FROM stt WHERE ctg_id = {_ctgId} and prj_id = {_prjId}");
+                    SttId[i] = db3.ScalarSql($"SELECT stt_id FROM stt WHERE ctg_id = {_ctgId} and prj_id = {_prjId}");
+                    ((TextBox)StackPanelEnter.FindName(_activeTextBox)).Text = _ctgTxt + " / " + _prjTxt;
+                    _ctgId = null;
+                    _ctgTxt = null;
                     break;
             }
+            //Если есть неопределенный sttId, то кнопка добавить - disable
+            for (int n = 0; n < _sttId.Length; n++)
+            {
+                ButtonAdd.IsEnabled = true;
+                if (_sttId[n] == null)
+                {
+                    ButtonAdd.IsEnabled = false;
+                    break;
+                }
+            }
 
-            ((TextBox)StackPanelEnter.FindName(_activeTextBox)).Text = _ctgTxt + " / " + _prjTxt;
-            //db3.PrjId = "%";
-            //db3.PrjText = null;
         }
 
         private void FillProjects(string ctgId, string nameSttId)
