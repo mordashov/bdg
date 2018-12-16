@@ -85,11 +85,11 @@
         </DataGrid>
         <StackPanel x:Name="StackPanelEnter" Grid.Row="3" Grid.Column="3">
             <StackPanel Orientation="Horizontal"  Margin="10,5,0,0">
-                <TextBox x:Name="TextBoxFrom" HorizontalAlignment="Left" Height="30" Margin="0,0,0,0" TextWrapping="Wrap" Text="Откуда" VerticalAlignment="Top" Width="289" GotFocus="textBoxFrom_GotFocus" TextChanged="TextBoxFrom_TextChanged" TabIndex="1" IsReadOnly="True" FontSize="16"/>
+                <TextBox x:Name="TextBoxFrom" HorizontalAlignment="Left" Height="30" Margin="0,0,0,0" TextWrapping="Wrap" Text="Откуда" VerticalAlignment="Top" Width="289" GotFocus="textBoxFrom_GotFocus" TabIndex="1" IsReadOnly="True" FontSize="16"/>
                 <TextBox x:Name="TextBoxSumFrom" HorizontalAlignment="Left" Height="30" Margin="30,0,0,0" VerticalAlignment="Top" Width="160" BorderBrush="{x:Null}" Text="0,00" FontSize="16" TextChanged="TextBoxSumFrom_TextChanged" />
             </StackPanel>
             <StackPanel Orientation="Horizontal"  Margin="10,5,0,0">
-                <TextBox x:Name="TextBoxTo" HorizontalAlignment="Left" Height="30" Margin="0,0,0,0" TextWrapping="Wrap" Text="Куда" VerticalAlignment="Top" Width="289" TextChanged="textBoxTo_TextChanged" GotFocus="textBoxTo_GotFocus" TabIndex="2" IsReadOnly="True" FontSize="16"/>
+                <TextBox x:Name="TextBoxTo" HorizontalAlignment="Left" Height="30" Margin="0,0,0,0" TextWrapping="Wrap" Text="Куда" VerticalAlignment="Top" Width="289" GotFocus="textBoxTo_GotFocus" TabIndex="2" IsReadOnly="True" FontSize="16"/>
                 <TextBox x:Name="TextBoxSumTo" HorizontalAlignment="Left" Height="30" Margin="30,0,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="160" BorderBrush="{x:Null}" Text="0,00" FontSize="16"/>
             </StackPanel>
             <TextBox x:Name="TextBoxSum" HorizontalAlignment="Left" Height="30" Margin="10,5,0,0" TextWrapping="Wrap" Text="0.00" VerticalAlignment="Top" Width="126" LostFocus="textBoxSum_LostFocus" TextChanged="textBoxSum_TextChanged" TabIndex="3" GotFocus="TextBoxSum_GotFocus" FontSize="16"/>

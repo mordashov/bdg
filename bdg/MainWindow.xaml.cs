@@ -35,18 +35,7 @@ namespace bdg
         //_sttId[0] - хранит значение для stt_id_from
         //_sttId[1] - хранит значение для stt_id_to
         private string[] _sttId = new string[2];
-
-        public string[] SttId
-        {
-            get
-            {
-               return _sttId;
-            }
-            set
-            {
-                _sttId = value;
-            } 
-        }
+        public string[] SttId { get => _sttId; set => _sttId = value; }
 
         //Для сохранения имени заполняемого поля (откуда/куда)
         private string _activeTextBox = "TextBoxFrom";
@@ -228,13 +217,7 @@ namespace bdg
             _prjId = "%";
             _prjTxt = null;
 
-            ButtonAddVisible();
-
-            //FillProjects(_ctgId, "stt_id_to");
             GetStt(DataGridCrt);
-            //PrjFill();
-            //RestExpenditure();
-
         }
 
         private void DataGridCrt_MouseUp(object sender, MouseButtonEventArgs e)
@@ -704,33 +687,6 @@ namespace bdg
             }
         }
 
-        private void ButtonAddVisible()
-        {
-            try
-            {
-                if (db3.PrjIdFrom != "%" && db3.PrjIdTo != "%")
-                {
-                    ButtonAdd.IsEnabled = false;
-                }
-                if (db3.PrjIdFrom == null && db3.PrjIdTo == null)
-                {
-                    ButtonAdd.IsEnabled = false;
-                }
-            }
-            catch (Exception)
-            {
-                // ignored
-            }
-        }
-        private void TextBoxFrom_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            //ButtonAddVisible();
-        }
-        private void textBoxTo_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            //ButtonAddVisible();
-        }
-
         private void DataGridPrj_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
             TextBox newValue = e.EditingElement as TextBox;
@@ -779,8 +735,6 @@ namespace bdg
             XmlLanguage.GetLanguage(CultureInfo.CurrentCulture.IetfLanguageTag)));
             //Заполняю критерии
             CrtFill();
-            //Заполняю проекты
-            //PrjFill();
             //Заполняю основную таблицу
             CshFill();
         }
