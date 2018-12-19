@@ -87,10 +87,25 @@ namespace bdg
                 case "DataGridPrj":
                     _prjId = drv[0].ToString();
                     _prjTxt = drv[1].ToString();
-                    SttId[i] = db3.ScalarSql($"SELECT stt_id FROM stt WHERE ctg_id = {_ctgId} and prj_id = {_prjId}");
+                    string sql = $"SELECT stt_id FROM stt WHERE ctg_id = {_ctgId} and prj_id = {_prjId}";
+                    SttId[i] = db3.ScalarSql(sql);
                     ((TextBox)StackPanelEnter.FindName(_activeTextBox)).Text = _ctgTxt + " / " + _prjTxt;
-                    _ctgId = null;
-                    _ctgTxt = null;
+                    if (SttId[i] == "0")
+                    {
+                        MessageBoxResult msg = MessageBox.Show($"Добавить связь {_ctgTxt} - {_prjTxt}?", "", MessageBoxButton.YesNo);
+                        if (msg == MessageBoxResult.Yes)
+                            if (SttId[i] == "0")
+                            {
+                                db3.RunSql($"INSERT INTO stt (ctg_id, prj_id) VALUES({_ctgId}, {_prjId});");
+                                SttId[i] = db3.ScalarSql(sql);
+                            }
+
+                        if (msg == MessageBoxResult.No)
+                        {
+                            SttId[i] = null;
+                            break;
+                        }
+                    }
                     break;
             }
             //Если есть неопределенный sttId, то кнопка добавить - disable
@@ -386,51 +401,56 @@ namespace bdg
             DateTime dt;
 
             //если изменяем строку
-            if (ButtonAdd.Content.ToString() == "Изменить")
-            {
-                string cshId = db3.CshId;
-                dt = Convert.ToDateTime(DateCsh.Text);
-                string cshDate = dt.ToString("yyyy-MM-dd");
-                sttIdFrom = db3.SttIdFrom;
-                sttIdTo = db3.SttIdTo;
-                string cshSum = TextBoxSum.Text;
-                string cshNote = TextBoxComment.Text;
-                string sql = $@"UPDATE csh SET 
-                                [csh_dt] = '{cshDate}'
-                                , [stt_id_from] = {sttIdFrom} 
-                                , [stt_id_to] = {sttIdTo}  
-                                , [csh_sum] = {cshSum}
-                                , [csh_pln] = 0
-                                , [csh_note] = '{cshNote}'
-                                WHERE csh_id = {cshId}";
-                db3.RunSql(sql);
-                CshFill();
-                return;
-            }
+            //if (ButtonAdd.Content.ToString() == "Изменить")
+            //{
+            //    string cshId = db3.CshId;
+            //    dt = Convert.ToDateTime(DateCsh.Text);
+            //    string cshDate = dt.ToString("yyyy-MM-dd");
+            //    sttIdFrom = db3.SttIdFrom;
+            //    sttIdTo = db3.SttIdTo;
+            //    string cshSum = TextBoxSum.Text;
+            //    string cshNote = TextBoxComment.Text;
+            //    string sql = $@"UPDATE csh SET 
+            //                    [csh_dt] = '{cshDate}'
+            //                    , [stt_id_from] = {sttIdFrom} 
+            //                    , [stt_id_to] = {sttIdTo}  
+            //                    , [csh_sum] = {cshSum}
+            //                    , [csh_pln] = 0
+            //                    , [csh_note] = '{cshNote}'
+            //                    WHERE csh_id = {cshId}";
+            //    db3.RunSql(sql);
+            //    CshFill();
+            //    return;
+            //}
 
             //если добавляем строку
-            sttIdFrom = SttInsert(db3.CtgIdFrom, db3.PrjIdFrom);
-            sttIdTo = SttInsert(db3.CtgIdTo, db3.PrjIdTo);
-            if (sttIdFrom == "0" || sttIdTo == "0")
-            {
-                MessageBox.Show("Данные не добавлены!");
-            }
-            else
-            {
+            //sttIdFrom = SttInsert(db3.CtgIdFrom, db3.PrjIdFrom);
+            //sttIdTo = SttInsert(db3.CtgIdTo, db3.PrjIdTo);
+            //if (sttIdFrom == "0" || sttIdTo == "0")
+            //{
+            //    MessageBox.Show("Данные не добавлены!");
+            //}
+            //else
+            //{
                 //Добавление новой строки
                 dt = Convert.ToDateTime(DateCsh.Text);
                 string plan = CheckBoxPln.IsChecked.ToString() == "0" ? "1" : "0";
                 string sql = $@"
                 INSERT INTO csh
                 (csh_dt, stt_id_from, stt_id_to, csh_sum, csh_pln, csh_note)
-                VALUES('{dt:yyyy-MM-dd}', {sttIdFrom}, {sttIdTo}, {TextBoxSum.Text}, {plan}, '{TextBoxComment.Text}');";
+                VALUES('{dt:yyyy-MM-dd}', {SttId[0]}, {SttId[1]}, {TextBoxSum.Text}, {plan}, '{TextBoxComment.Text}');";
                 db3.RunSql(sql);
                 CshFill();
-                //Обнуляем переменные и сумму
-                db3.CtgIdFrom = "%"; db3.PrjIdFrom = "%";
-                db3.CtgIdTo = "%"; db3.PrjIdTo = "%";
-                db3.CtgId = "%"; db3.PrjId = "%";
-                TextBoxSum.Text = "0.00";
+            //Обнуляем переменные и сумму
+            SttId[0] = null;
+            SttId[1] = null;
+            _ctgId = null;
+            _ctgTxt = null;
+            _prjId = null;
+            _ctgId = null;
+
+
+            TextBoxSum.Text = "0.00";
                 TextBoxComment.Text = "";
                 DateCsh.Text = DateTime.Now.ToString(CultureInfo.CurrentCulture);
                 TextBoxTo.Text = "Куда";
@@ -438,7 +458,7 @@ namespace bdg
                 TextBoxSumFrom.Text = "";
                 TextBoxSumTo.Text = "";
                 TextBoxFrom.Focus();
-            }
+            //}
             
         }
 

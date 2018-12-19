@@ -6,10 +6,12 @@
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
         Title="Homemade Financier" Height="800" Width="1200" Loaded="Window_Loaded">
-    <Window.Resources></Window.Resources>
+    <Window.Resources>
+        <Image x:Key="Refresh" Source="Resources/Refresh.ico" Width="32" Height="32"/>
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="5*"></RowDefinition>
+            <RowDefinition Height="10*"></RowDefinition>
             <RowDefinition Height="50*"></RowDefinition>
             <RowDefinition Height="5*"></RowDefinition>
             <RowDefinition Height="30*"></RowDefinition>
@@ -23,7 +25,36 @@
             <ColumnDefinition Width="249*"></ColumnDefinition>
             <ColumnDefinition Width="92*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <DataGrid x:Name="DataGridCrt" HorizontalAlignment="Left" Margin="20,0,0,0" Grid.Row="3" Grid.Column="0" VerticalAlignment="Top" ItemsSource="{Binding}" AutoGenerateColumns="False" Width="215" CellEditEnding="dataGridCrt_CellEditEnding" GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="Gray" FontSize="16" CanUserAddRows="False" MouseUp="DataGridCrt_MouseUp" KeyUp="DataGridCrt_KeyUp">
+        <StackPanel 
+            Grid.Row="0" 
+            Grid.Column="0"
+            VerticalAlignment="Center"
+            HorizontalAlignment="Left"
+            Margin="10">
+            <Button            
+                Height="56"
+                Width="61"
+                VerticalAlignment="Top"
+                HorizontalAlignment="Left"
+                Content="{StaticResource Refresh}"/>
+        </StackPanel>
+        <DataGrid 
+            x:Name="DataGridCrt" 
+            HorizontalAlignment="Left" 
+            Margin="20,0,0,0" 
+            Grid.Row="3" 
+            Grid.Column="0" 
+            VerticalAlignment="Top" 
+            ItemsSource="{Binding}" 
+            AutoGenerateColumns="False" 
+            Width="215" 
+            CellEditEnding="dataGridCrt_CellEditEnding" 
+            GridLinesVisibility="Horizontal" 
+            HorizontalGridLinesBrush="Gray" 
+            FontSize="16" 
+            CanUserAddRows="False" 
+            MouseUp="DataGridCrt_MouseUp" 
+            KeyUp="DataGridCrt_KeyUp">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID" Binding="{Binding ctg_id}" Visibility="Collapsed" />
                 <DataGridTextColumn Header="Категория" Binding="{Binding ctg_nm}" Width="180"/>
