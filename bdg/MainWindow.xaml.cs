@@ -42,6 +42,7 @@ namespace bdg
 
         private void CrtFill() //Заполняю DataGrid с критериями
         {
+            DataGridCrt.DataContext = null;
             string sql = @"
                 SELECT [ctg_id]
                       ,[ctg_nm]
@@ -440,15 +441,8 @@ namespace bdg
                 (csh_dt, stt_id_from, stt_id_to, csh_sum, csh_pln, csh_note)
                 VALUES('{dt:yyyy-MM-dd}', {SttId[0]}, {SttId[1]}, {TextBoxSum.Text}, {plan}, '{TextBoxComment.Text}');";
                 db3.RunSql(sql);
-                CshFill();
-            //Обнуляем переменные и сумму
-            SttId[0] = null;
-            SttId[1] = null;
-            _ctgId = null;
-            _ctgTxt = null;
-            _prjId = null;
-            _ctgId = null;
-
+                //Обновляем гриды, переменные и текстбоксы
+                Refresh();
 
             TextBoxSum.Text = "0.00";
                 TextBoxComment.Text = "";
@@ -763,6 +757,27 @@ namespace bdg
         {
             try { TextBoxTo.Focus(); }
             catch { }
+        }
+
+        private void Refresh()
+        {
+            //Заполняю основную таблицу
+            CshFill();
+            CrtFill();
+            DataGridPrj.DataContext = null;
+            //Обнуляем переменные и сумму
+            SttId[0] = null;
+            SttId[1] = null;
+            _ctgId = null;
+            _ctgTxt = null;
+            _prjId = null;
+            _ctgId = null;
+
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            Refresh();
         }
     }
 }

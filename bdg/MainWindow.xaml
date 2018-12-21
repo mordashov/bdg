@@ -7,11 +7,11 @@
         mc:Ignorable="d"
         Title="Homemade Financier" Height="800" Width="1200" Loaded="Window_Loaded">
     <Window.Resources>
-        <Image x:Key="Refresh" Source="Resources/Refresh.ico" Width="32" Height="32"/>
+        <Image x:Key="Refresh" Source="Resources/Refresh.ico" Width="16" Height="16"/>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="10*"></RowDefinition>
+            <RowDefinition Height="5*"></RowDefinition>
             <RowDefinition Height="50*"></RowDefinition>
             <RowDefinition Height="5*"></RowDefinition>
             <RowDefinition Height="30*"></RowDefinition>
@@ -28,16 +28,18 @@
         <StackPanel 
             Grid.Row="0" 
             Grid.Column="0"
-            VerticalAlignment="Center"
-            HorizontalAlignment="Left"
-            Margin="10">
-            <Button            
-                Height="56"
-                Width="61"
-                VerticalAlignment="Top"
-                HorizontalAlignment="Left"
-                Content="{StaticResource Refresh}"/>
+            Grid.ColumnSpan="5"
+            Margin="10,0,10,1" 
+            VerticalAlignment="Bottom"
+            >
+            <Button
+                Content ="Обновить"  
+                FontSize="16" 
+                VerticalAlignment="Center" 
+                Click="Button_Click"
+            />
         </StackPanel>
+        <!--Content="{StaticResource Refresh}"-->
         <DataGrid 
             x:Name="DataGridCrt" 
             HorizontalAlignment="Left" 
@@ -92,12 +94,22 @@
                 </ContextMenu>
             </DataGrid.ContextMenu>
         </DataGrid>
-        <DataGrid x:Name="DataGridCsh" HorizontalAlignment="Left" Margin="10,0,0,0" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="5" VerticalAlignment="Top" ItemsSource="{Binding}" AutoGenerateColumns="False" 
-                   
-                  HorizontalGridLinesBrush="Gray" VerticalGridLinesBrush="Gray" MinHeight="260" FontSize="16" Width="1172">
+        <DataGrid 
+            x:Name="DataGridCsh" 
+            Grid.Row="1"
+            Grid.Column="0"
+            Grid.ColumnSpan="5"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Margin="10,0,10,0"
+            ItemsSource="{Binding}"
+            AutoGenerateColumns="False"
+            HorizontalGridLinesBrush="Gray" 
+            VerticalGridLinesBrush="Gray" 
+            MinHeight="260" FontSize="16">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID" Binding="{Binding csh_id}" Visibility="Collapsed" />
-                <DataGridTextColumn Header="Дата" Binding="{Binding date}" Width="70"/>
+                <DataGridTextColumn Header="Дата" Binding="{Binding date}" Width="85"/>
                 <DataGridTextColumn Header="stt_id_from" Binding="{Binding stt_id_from}" Visibility="Collapsed"/>
                 <DataGridTextColumn Header="От куда" Binding="{Binding from}" Width="20*"/>
                 <DataGridTextColumn Header="stt_id_to" Binding="{Binding stt_id_to}" Visibility="Collapsed"/>
