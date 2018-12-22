@@ -254,21 +254,12 @@ namespace bdg
         private void DataGridPrjSelect() //Изменение выбора в проектах
         {
             DataRowView drv = (DataRowView)DataGridPrj.SelectedItem;
-            try
-            {
-                _prjId = drv.Row[0].ToString();
-                _prjTxt = drv.Row[1].ToString();
+            _prjId = drv.Row[0].ToString();
+            _prjTxt = drv.Row[1].ToString();
 
-                GetStt(DataGridPrj);
-                GetTotalSum(_sttId[0], TextBoxSumFrom);
-                GetTotalSum(_sttId[1], TextBoxSumTo);
-                //RestExpenditure();
-            }
-            catch (Exception)
-            {
-                _prjId = "%";
-                _prjTxt = null;
-            }
+            GetStt(DataGridPrj);
+            GetTotalSum(_sttId[0], TextBoxSumFrom);
+            GetTotalSum(_sttId[1], TextBoxSumTo);
         }
 
         private void DataGridPrj_MouseUp(object sender, MouseButtonEventArgs e)

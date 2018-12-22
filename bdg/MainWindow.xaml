@@ -56,7 +56,7 @@
             FontSize="16" 
             CanUserAddRows="False" 
             MouseUp="DataGridCrt_MouseUp" 
-            KeyUp="DataGridCrt_KeyUp">
+            KeyUp="DataGridCrt_KeyUp" SelectionMode="Single">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID" Binding="{Binding ctg_id}" Visibility="Collapsed" />
                 <DataGridTextColumn Header="Категория" Binding="{Binding ctg_nm}" Width="180"/>
@@ -68,7 +68,7 @@
                 </ContextMenu>
             </DataGrid.ContextMenu>
         </DataGrid>
-        <DataGrid x:Name="DataGridPrj" HorizontalAlignment="Left" Margin="20,0,0,0" Grid.Row="3" Grid.Column="1" VerticalAlignment="Top" ItemsSource="{Binding}" AutoGenerateColumns="False" Width="215" GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="Gray" CellEditEnding="DataGridPrj_CellEditEnding" FontSize="16" MouseUp="DataGridPrj_MouseUp" KeyUp="DataGridPrj_KeyUp">
+        <DataGrid x:Name="DataGridPrj" HorizontalAlignment="Left" Margin="20,0,0,0" Grid.Row="3" Grid.Column="1" VerticalAlignment="Top" ItemsSource="{Binding}" AutoGenerateColumns="False" Width="215" GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="Gray" CellEditEnding="DataGridPrj_CellEditEnding" FontSize="16" MouseUp="DataGridPrj_MouseUp" KeyUp="DataGridPrj_KeyUp" SelectionMode="Single">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID" Binding="{Binding prj_id}" Visibility="Collapsed" />
                 <DataGridTextColumn Header="Проект" Binding="{Binding prj_nm}"  Width="180" />
@@ -106,7 +106,7 @@
             AutoGenerateColumns="False"
             HorizontalGridLinesBrush="Gray" 
             VerticalGridLinesBrush="Gray" 
-            MinHeight="260" FontSize="16">
+            MinHeight="260" FontSize="16" SelectionMode="Single">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID" Binding="{Binding csh_id}" Visibility="Collapsed" />
                 <DataGridTextColumn Header="Дата" Binding="{Binding date}" Width="85"/>
