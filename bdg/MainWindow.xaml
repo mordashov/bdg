@@ -135,7 +135,7 @@
                 <TextBox x:Name="TextBoxTo" HorizontalAlignment="Left" Height="30" Margin="0,0,0,0" TextWrapping="Wrap" Text="Куда" VerticalAlignment="Top" Width="289" GotFocus="textBoxTo_GotFocus" TabIndex="2" IsReadOnly="True" FontSize="16"/>
                 <TextBox x:Name="TextBoxSumTo" HorizontalAlignment="Left" Height="30" Margin="30,0,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="160" BorderBrush="{x:Null}" Text="0,00" FontSize="16"/>
             </StackPanel>
-            <TextBox x:Name="TextBoxSum" HorizontalAlignment="Left" Height="30" Margin="10,5,0,0" TextWrapping="Wrap" Text="0.00" VerticalAlignment="Top" Width="126" LostFocus="textBoxSum_LostFocus" TextChanged="textBoxSum_TextChanged" TabIndex="3" GotFocus="TextBoxSum_GotFocus" FontSize="16"/>
+            <TextBox x:Name="TextBoxSum" HorizontalAlignment="Left" Height="30" Margin="10,5,0,0" TextWrapping="Wrap" Text="0.00" VerticalAlignment="Top" Width="126" LostFocus="textBoxSum_LostFocus" TabIndex="3" GotFocus="TextBoxSum_GotFocus" FontSize="16"/>
             <DatePicker x:Name="DateCsh" HorizontalAlignment="Left" Margin="10,5,0,0" VerticalAlignment="Top" SelectedDate="{x:Static sys:DateTime.Now}" Height="30" Width="126" TabIndex="3" FontSize="16" />
             <TextBox x:Name="TextBoxComment" HorizontalAlignment="Left" Height="30" Margin="10,5,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="478" TabIndex="4" FontSize="16"/>
             <Button x:Name="ButtonAdd" Content="Добавить" HorizontalAlignment="Left" Height="42" Margin="10,10,0,0" VerticalAlignment="Top" Width="100" Click="buttonAdd_Click" TabIndex="5" FontSize="16" IsEnabled="False"/>

@@ -30,7 +30,7 @@ namespace bdg
         private string _prjId; //ID проекта
         public string PrjId { get => _prjId; set => _prjId = value; }
 
-        private string _prjTxt; //Наименование каталога
+        private string _prjTxt; //Наименование проекта
         public string PrjTxt { get => _prjTxt; set => _prjTxt = value; }
 
         //_sttId[0] - хранит значение для stt_id_from
@@ -51,11 +51,16 @@ namespace bdg
             ";
             DataTable table = db3.SelectSql(sql);
             DataGridCrt.DataContext = table.DefaultView;
+            if (DataGridCrt.Items.Count != 0)
+            {
+                DataGridCrt.SelectedIndex = 0;
+                DataGridCrt.ScrollIntoView(DataGridCrt.Items[0]);
+            }
+
         }
 
-            private void GetStt(DataGrid activeDataGrid)
+        private void GetStt(DataGrid activeDataGrid) // Получение stt_id_to либо stt_id_from
         {
-            // Получение stt_id_to либо stt_id_from
             // Параметры:
             // DataGrid activeDataGrid - DataGrid с категорией или DataGrid с проектом
 
@@ -577,18 +582,6 @@ namespace bdg
             if (TextBoxSum.Text == "0.00")
                 TextBoxSum.Text = null;
         }
-        private void textBoxSum_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            if (!TextBoxSum.IsFocused)
-            {
-                TextBoxSum.Text = TextBoxSum.Text.Replace(",", ".");
-                TextBoxSum.Text = TextBoxSum.Text.Replace("\t", "");
-                TextBoxSum.Text = TextBoxSum.Text.Replace("\b", "");
-
-            }
-            
-        }
-
         private void dataGridCrt_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
             TextBox newValue = e.EditingElement as TextBox;
