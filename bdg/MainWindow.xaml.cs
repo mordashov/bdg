@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.Globalization;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -42,7 +43,6 @@ namespace bdg
 
         private void CrtFill() //Заполняю DataGrid с критериями
         {
-            DataGridCrt.DataContext = null;
             string sql = @"
                 SELECT [ctg_id]
                       ,[ctg_nm]
@@ -53,7 +53,7 @@ namespace bdg
             DataGridCrt.DataContext = table.DefaultView;
         }
 
-        private void GetStt(DataGrid activeDataGrid)
+            private void GetStt(DataGrid activeDataGrid)
         {
             // Получение stt_id_to либо stt_id_from
             // Параметры:
@@ -218,23 +218,23 @@ namespace bdg
               INNER JOIN stt AS stt_to ON stt_to.stt_id=csh.stt_id_to
               INNER JOIN ctg AS ctg_to ON ctg_to.ctg_id = stt_to.ctg_id
               INNER JOIN prj AS prj_to ON prj_to.prj_id = stt_to.prj_id
-              ORDER BY csh_dt DESC
+              ORDER BY csh_dt DESC, csh_id DESC
               ;";
             DataTable table = db3.SelectSql(sql);
             DataGridCsh.DataContext = table.DefaultView;
             ButtonAdd.Content = "Добавить";
         }
 
-        private void DataGridCrtSelect() //Измененние выбора в критериях
-        {
-            DataRowView drv = (DataRowView)DataGridCrt.SelectedItem;
-            _ctgId = drv[0].ToString();
-            _ctgTxt = drv[1].ToString();
-            _prjId = "%";
-            _prjTxt = null;
+        //private void DataGridCrtSelect() //Измененние выбора в критериях
+        //{
+        //    DataRowView drv = (DataRowView)DataGridCrt.SelectedItem;
+        //    _ctgId = drv[0].ToString();
+        //    _ctgTxt = drv[1].ToString();
+        //    _prjId = "%";
+        //    _prjTxt = null;
 
-            GetStt(DataGridCrt);
-        }
+        //    GetStt(DataGridCrt);
+        //}
 
         private void DataGridCrt_MouseUp(object sender, MouseButtonEventArgs e)
         {
@@ -444,14 +444,6 @@ namespace bdg
                 //Обновляем гриды, переменные и текстбоксы
                 Refresh();
 
-            TextBoxSum.Text = "0.00";
-                TextBoxComment.Text = "";
-                DateCsh.Text = DateTime.Now.ToString(CultureInfo.CurrentCulture);
-                TextBoxTo.Text = "Куда";
-                TextBoxFrom.Text = "Откуда";
-                TextBoxSumFrom.Text = "";
-                TextBoxSumTo.Text = "";
-                TextBoxFrom.Focus();
             //}
             
         }
@@ -568,6 +560,7 @@ namespace bdg
         {
             //Для sqlite меняю запятую на точку
             TextBoxSum.Text = TextBoxSum.Text.Replace(",", ".");
+            TextBoxSum.Text = TextBoxSum.Text.Replace(" ", "");
             try
             {
                 //Для парсера меняю точку на запятую (в системе разделитель запятая)
@@ -575,8 +568,9 @@ namespace bdg
             }
             catch (Exception)
             {
-                TextBoxSum.Text = "0.00";
+                MessageBox.Show("Неверная сумма!");
             }
+
         }
         private void TextBoxSum_GotFocus(object sender, RoutedEventArgs e)
         {
@@ -588,6 +582,9 @@ namespace bdg
             if (!TextBoxSum.IsFocused)
             {
                 TextBoxSum.Text = TextBoxSum.Text.Replace(",", ".");
+                TextBoxSum.Text = TextBoxSum.Text.Replace("\t", "");
+                TextBoxSum.Text = TextBoxSum.Text.Replace("\b", "");
+
             }
             
         }
@@ -747,10 +744,7 @@ namespace bdg
             Thread.CurrentThread.CurrentUICulture = new CultureInfo("ru-Ru");
             LanguageProperty.OverrideMetadata(typeof(FrameworkElement), new FrameworkPropertyMetadata(
             XmlLanguage.GetLanguage(CultureInfo.CurrentCulture.IetfLanguageTag)));
-            //Заполняю критерии
-            CrtFill();
-            //Заполняю основную таблицу
-            CshFill();
+            Refresh();
         }
 
         private void TextBoxSumFrom_TextChanged(object sender, TextChangedEventArgs e)
@@ -761,18 +755,29 @@ namespace bdg
 
         private void Refresh()
         {
+            //Очищаю DataGrid критериев и проектов
+            DataGridCrt.DataContext = null;
+            DataGridPrj.DataContext = null;
             //Заполняю основную таблицу
             CshFill();
+            //Заполняю критерии
             CrtFill();
-            DataGridPrj.DataContext = null;
             //Обнуляем переменные и сумму
-            SttId[0] = null;
-            SttId[1] = null;
+            SttId[0] = "0";
+            SttId[1] = "0";
             _ctgId = null;
             _ctgTxt = null;
             _prjId = null;
             _ctgId = null;
-
+            ButtonAdd.IsEnabled = false;
+            TextBoxSum.Text = "0.00";
+            TextBoxComment.Text = "";
+            DateCsh.Text = DateTime.Now.ToString(CultureInfo.CurrentCulture);
+            TextBoxTo.Text = "Куда";
+            TextBoxFrom.Text = "Откуда";
+            TextBoxSumFrom.Text = "";
+            TextBoxSumTo.Text = "";
+            TextBoxFrom.Focus();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
