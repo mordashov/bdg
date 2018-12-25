@@ -106,7 +106,7 @@
             AutoGenerateColumns="False"
             HorizontalGridLinesBrush="Gray" 
             VerticalGridLinesBrush="Gray" 
-            MinHeight="260" FontSize="16" SelectionMode="Single">
+            MinHeight="260" FontSize="16" SelectionMode="Single" MouseUp="DataGridCsh_MouseUp">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID" Binding="{Binding csh_id}" Visibility="Collapsed" />
                 <DataGridTextColumn Header="Дата" Binding="{Binding date}" Width="85"/>

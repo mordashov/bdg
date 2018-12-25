@@ -150,60 +150,6 @@ namespace bdg
             DataGridPrj.DataContext = table;
         }
 
-        //private void PrjFill() //Заполняю DataGrid с проектами (подкретерии)
-        //{
-        //    //Заполняю таблицу prj
-        //    string sql = @"
-        //        SELECT [prj_id]
-        //              ,[prj_nm]
-        //              ,'0' as ctg_id
-        //              ,'0' as color                        
-        //          FROM [prj]
-        //          ORDER BY [prj_nm];
-        //    ";
-        //    DataTable table = db3.SelectSql(sql);
-        //    //Расставляю признак наличия привязки к выбранной категории
-        //    string ctgId = db3.CtgId ?? "0";
-        //    sql = $@"
-        //        SELECT prj.[prj_id], [stt].[stt_id]
-        //        FROM [prj]
-        //        LEFT JOIN stt ON stt.prj_id=prj.prj_id
-        //        LEFT JOIN ctg ON ctg.ctg_id=stt.ctg_id
-        //        WHERE ctg.ctg_id = {ctgId}";
-        //    DataTable ctgTable = db3.SelectSql(sql);
-        //    foreach (DataRow row in ctgTable.Rows) // Прохожу по всем строкам таблицы prj выбранной по ctg_id
-        //    {
-        //        //считаю сколько раз stt_id встречается в csh,чтобы показывать ее в начале спика
-        //        //получаю значение [stt].[stt_id]
-        //        string ctgTableStt = row[1].ToString();
-        //        //по умолчанию буду считать stt_id_to в csh
-        //        string sttId = "stt_id_to"; 
-        //        //Если поле курсов в Откуда то считаю stt_id_from в csh
-        //        if (TextBoxFromTo.Text == "Откуда") sttId = "stt_id_from";
-        //        //Получаю количество
-        //        sql = $@"SELECT 0-COUNT([stt_id_from]) as stt_id_from
-        //        FROM[csh]
-        //        WHERE [{sttId}] = {ctgTableStt}";
-        //        string counSttId = db3.ScalarSql(sql).PadLeft(5, '0');
-
-        //        sql = $@"
-        //        SELECT prj.[prj_id]
-        //        FROM [prj]
-        //        LEFT JOIN stt ON stt.prj_id=prj.prj_id
-        //        LEFT JOIN ctg ON ctg.ctg_id=stt.ctg_id
-        //        WHERE ctg.ctg_id = {ctgId}";
-
-        //        string ctgTablePrj = row[0].ToString(); //получаю значение [prj].[prj_id]
-        //        DataRow[] prjRow = table.Select("prj_id = " + ctgTablePrj); //Полученное значение ищу в table, чтобы поле ctg_id поменить 1 (для подкрашивания)
-        //        prjRow[0]["ctg_id"] = counSttId;
-        //        prjRow[0]["color"] = "1";
-        //    }
-            
-        //    //DataGridPrj.DataContext = table.DefaultView;
-        //    DataView tableSort = new DataView(table) {Sort = "ctg_id DESC, prj_nm ASC"};
-        //    DataGridPrj.DataContext = tableSort;
-        //}
-
         private void CshFill() //Заполняю основную DataGrid с перечнем движения денежных средств
         {
             string sql = @"
@@ -229,17 +175,6 @@ namespace bdg
             DataGridCsh.DataContext = table.DefaultView;
             ButtonAdd.Content = "Добавить";
         }
-
-        //private void DataGridCrtSelect() //Измененние выбора в критериях
-        //{
-        //    DataRowView drv = (DataRowView)DataGridCrt.SelectedItem;
-        //    _ctgId = drv[0].ToString();
-        //    _ctgTxt = drv[1].ToString();
-        //    _prjId = "%";
-        //    _prjTxt = null;
-
-        //    GetStt(DataGridCrt);
-        //}
 
         private void DataGridCrt_MouseUp(object sender, MouseButtonEventArgs e)
         {
@@ -308,87 +243,6 @@ namespace bdg
 
             TextBoxSum.Text = $"{sum[0] - sum[1]:C}";
         }
-
-        //private void RestExpenditure() //Заполнение Откуда, Куда и расчет остатка по статье
-        //{
-        //    switch (_activeTextBox)
-        //    {
-        //        case "stt_id_from":
-        //            TextBoxFrom.Text = db3.CtgText;
-        //            TextBoxFrom.Text = TextBoxFrom.Text + " / " + db3.PrjText;
-        //            db3.CtgIdFrom = db3.CtgId;
-        //            db3.PrjIdFrom = db3.PrjId;
-
-        //            //Расчет остатка по статье
-        //            string sql;
-        //            //Дт
-        //            sql = $@"
-        //            SELECT 
-        //                  SUM([csh_sum])
-        //              FROM [csh]
-        //              INNER JOIN stt ON stt.stt_id = csh.stt_id_to
-        //              INNER JOIN ctg ON ctg.ctg_id = stt.ctg_id
-        //              INNER JOIN prj ON prj.prj_id = stt.prj_id
-        //              WHERE stt.ctg_id = {db3.CtgIdFrom} AND stt.prj_id like '{db3.PrjIdFrom}'
-        //              GROUP BY ctg.ctg_id";
-        //            double sumDt = double.Parse(db3.ScalarSql(sql));
-        //            //Кт
-        //            sql = $@"
-        //            SELECT 
-        //                  SUM([csh_sum])
-        //              FROM [csh]
-        //              INNER JOIN stt ON stt.stt_id = csh.stt_id_from
-        //              INNER JOIN ctg ON ctg.ctg_id = stt.ctg_id
-        //              INNER JOIN prj ON prj.prj_id = stt.prj_id
-        //              WHERE stt.ctg_id = {db3.CtgIdFrom} AND stt.prj_id like '{db3.PrjIdFrom}'
-        //              GROUP BY ctg.ctg_id";
-        //            double sumKt = double.Parse(db3.ScalarSql(sql));
-        //            //Остаток по статье (категоря / проект)
-        //            double sum = sumDt - sumKt;
-        //            TextBoxSumFrom.Text = $"{sum:C}";
-        //            //Перенос фокуса на Куда после запонения Откуда
-        //            string textFrom = TextBoxFrom.Text;
-        //            string subTextFrom = textFrom.Substring(textFrom.Length - 2);
-        //            if (subTextFrom != "/ " && textFrom != "Откуда") TextBoxTo.Focus();
-        //            break;
-        //        case "stt_id_to":
-        //            TextBoxTo.Text = db3.CtgText;
-        //            TextBoxTo.Text = TextBoxTo.Text + " / " + db3.PrjText;
-        //            db3.CtgIdTo = db3.CtgId;
-        //            db3.PrjIdTo = db3.PrjId;
-
-        //            //Расчет остатка по статье
-        //            string sql;
-        //            //Дт
-        //            sql = $@"
-        //            SELECT 
-        //                  SUM([csh_sum])
-        //              FROM [csh]
-        //              INNER JOIN stt ON stt.stt_id = csh.stt_id_to
-        //              INNER JOIN ctg ON ctg.ctg_id = stt.ctg_id
-        //              INNER JOIN prj ON prj.prj_id = stt.prj_id
-        //              WHERE stt.ctg_id = {db3.CtgIdTo} AND stt.prj_id like '{db3.PrjIdTo}'
-        //              GROUP BY ctg.ctg_id";
-        //            double sumDt = double.Parse(db3.ScalarSql(sql));
-        //            //Кт
-        //            sql = $@"
-        //            SELECT 
-        //                  SUM([csh_sum])
-        //              FROM [csh]
-        //              INNER JOIN stt ON stt.stt_id = csh.stt_id_from
-        //              INNER JOIN ctg ON ctg.ctg_id = stt.ctg_id
-        //              INNER JOIN prj ON prj.prj_id = stt.prj_id
-        //              WHERE stt.ctg_id = {db3.CtgIdTo} AND stt.prj_id like '{db3.PrjIdTo}'
-        //              GROUP BY ctg.ctg_id";
-        //            double sumKt = double.Parse(db3.ScalarSql(sql));
-        //            //Остаток по статье (категоря / проект)
-        //            double sum = sumDt - sumKt;
-        //            TextBoxSumTo.Text = $"{sum:C}";
-        //            break;
-        //    }
-
-        //    ButtonAddVisible(); //Проверяю какой должна быть кнопка активной или нет
-        //}
 
         private void buttonAdd_Click(object sender, RoutedEventArgs e) //Добавление/изменение данных в csh
         {
@@ -475,6 +329,26 @@ namespace bdg
 
         }
 
+        private void CshSelect()
+        {
+            DataRowView dataRow = (DataRowView)DataGridCsh.SelectedItem ?? (DataRowView)DataGridCsh.Items[0];
+            int countColumn = dataRow.Row.ItemArray.Length; 
+            for (int i = 0; i < countColumn; i++)
+            {
+                string columnName = DataGridCsh.Columns[i].Header.ToString();
+                switch (columnName)
+                {
+                    case "stt_id_from":
+                        SttId[0] = ((DataRowView) DataGridCsh.Items[i]).ToString();
+                        break;
+                    case "stt_id_to":
+                        SttId[1] = ((DataRowView)DataGridCsh.Items[i]).ToString();
+                        break;
+                }
+            }
+            string cshId = dataRow.Row.ItemArray[0].ToString();
+        }
+
         //private void dataGridCsh_SelectionChanged(object sender, SelectionChangedEventArgs e)
         //{
         //    DataRowView dataRow = (DataRowView)DataGridCsh.SelectedItem ?? (DataRowView)DataGridCsh.Items[0];
@@ -500,7 +374,7 @@ namespace bdg
         //    INNER JOIN stt as stt_from ON stt_from.stt_id = csh.stt_id_from
         //    INNER JOIN ctg as ctg_from ON ctg_from.ctg_id = stt_from.ctg_id
         //    INNER JOIN prj as prj_from ON prj_from.prj_id = stt_from.prj_id
-  
+
         //    INNER JOIN stt as stt_to ON stt_to.stt_id = csh.stt_id_to
         //    INNER JOIN ctg as ctg_to ON ctg_to.ctg_id = stt_to.ctg_id
         //    INNER JOIN prj as prj_to ON prj_to.prj_id = stt_to.prj_id
@@ -767,6 +641,11 @@ namespace bdg
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             Refresh();
+        }
+
+        private void DataGridCsh_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            CshSelect();
         }
     }
 }
