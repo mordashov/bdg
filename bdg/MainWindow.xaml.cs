@@ -336,13 +336,40 @@ namespace bdg
             for (int i = 0; i < countColumn; i++)
             {
                 string columnName = DataGridCsh.Columns[i].Header.ToString();
+                string cellValue = ((DataRowView)DataGridCsh.Items[i]).ToString();
+                //string[,] fieldsArray = new string[6,2];
+                //fieldsArray[0, 0] = "stt_id_from";
+                //fieldsArray[0, 1] = SttId[0];
+                //fieldsArray[1, 0] = "stt_id_to";
+                //fieldsArray[1, 1] = SttId[1];
+                //fieldsArray[2, 0] = "От куда";
+                //fieldsArray[2, 1] = "От куда";
+                //fieldsArray[3, 0] = "Куда";
+                //fieldsArray[3, 1] = "Куда";
+                //fieldsArray[4, 0] = "Сумма";
+                //fieldsArray[4, 1] = "Сумма";
+                //fieldsArray[5, 0] = "Примечение";
+                //fieldsArray[5, 1] = "Примечение";
+
                 switch (columnName)
                 {
                     case "stt_id_from":
-                        SttId[0] = ((DataRowView) DataGridCsh.Items[i]).ToString();
+                        SttId[0] = cellValue;
                         break;
                     case "stt_id_to":
-                        SttId[1] = ((DataRowView)DataGridCsh.Items[i]).ToString();
+                        SttId[1] = cellValue;
+                        break;
+                    case "От куда":
+                        TextBoxFrom.Text = cellValue;
+                        break;
+                    case "Куда":
+                        TextBoxTo.Text = cellValue;
+                        break;
+                    case "Сумма":
+                        TextBoxSum.Text = cellValue;
+                        break;
+                    case "Примечение":
+                        TextBoxComment.Text = cellValue;
                         break;
                 }
             }
