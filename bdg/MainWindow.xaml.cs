@@ -36,7 +36,42 @@ namespace bdg
         //_sttId[0] - хранит значение для stt_id_from
         //_sttId[1] - хранит значение для stt_id_to
         private string[] _sttId = new string[2];
-        public string[] SttId { get => _sttId; set => _sttId = value; }
+        public string[] SttId
+        {
+            get
+            {
+                //Если есть неопределенный sttId, то кнопка добавить - disable
+                for (int n = 0; n < _sttId.Length; n++)
+                {
+                    ButtonAdd.IsEnabled = true;
+                    if (_sttId[n] == null)
+                    {
+                        ButtonAdd.IsEnabled = false;
+                        break;
+                    }
+                }
+
+                return _sttId;
+
+            }
+            set
+            {
+                _sttId = value;
+                
+                //Если есть неопределенный sttId, то кнопка добавить - disable
+                for (int n = 0; n < _sttId.Length; n++)
+                {
+                    ButtonAdd.IsEnabled = true;
+                    if (_sttId[n] == null)
+                    {
+                        ButtonAdd.IsEnabled = false;
+                        break;
+                    }
+                }
+
+
+            }
+        }
 
         //Для сохранения имени заполняемого поля (откуда/куда)
         private string _activeTextBox = "TextBoxFrom";
@@ -114,16 +149,16 @@ namespace bdg
                     }
                     break;
             }
-            //Если есть неопределенный sttId, то кнопка добавить - disable
-            for (int n = 0; n < _sttId.Length; n++)
-            {
-                ButtonAdd.IsEnabled = true;
-                if (_sttId[n] == null)
-                {
-                    ButtonAdd.IsEnabled = false;
-                    break;
-                }
-            }
+            ////Если есть неопределенный sttId, то кнопка добавить - disable
+            //for (int n = 0; n < _sttId.Length; n++)
+            //{
+            //    ButtonAdd.IsEnabled = true;
+            //    if (_sttId[n] == null)
+            //    {
+            //        ButtonAdd.IsEnabled = false;
+            //        break;
+            //    }
+            //}
 
         }
 
@@ -336,7 +371,7 @@ namespace bdg
             for (int i = 0; i < countColumn; i++)
             {
                 string columnName = DataGridCsh.Columns[i].Header.ToString();
-                string cellValue = ((DataRowView)DataGridCsh.Items[i]).ToString();
+                string cellValue = dataRow.Row.ItemArray[i].ToString();
                 //string[,] fieldsArray = new string[6,2];
                 //fieldsArray[0, 0] = "stt_id_from";
                 //fieldsArray[0, 1] = SttId[0];
@@ -373,7 +408,7 @@ namespace bdg
                         break;
                 }
             }
-            string cshId = dataRow.Row.ItemArray[0].ToString();
+            //string cshId = dataRow.Row.ItemArray[0].ToString();
         }
 
         //private void dataGridCsh_SelectionChanged(object sender, SelectionChangedEventArgs e)
