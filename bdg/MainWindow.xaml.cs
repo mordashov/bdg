@@ -57,19 +57,6 @@ namespace bdg
             set
             {
                 _sttId = value;
-                
-                //Если есть неопределенный sttId, то кнопка добавить - disable
-                for (int n = 0; n < _sttId.Length; n++)
-                {
-                    ButtonAdd.IsEnabled = true;
-                    if (_sttId[n] == null)
-                    {
-                        ButtonAdd.IsEnabled = false;
-                        break;
-                    }
-                }
-
-
             }
         }
 
@@ -149,17 +136,6 @@ namespace bdg
                     }
                     break;
             }
-            ////Если есть неопределенный sttId, то кнопка добавить - disable
-            //for (int n = 0; n < _sttId.Length; n++)
-            //{
-            //    ButtonAdd.IsEnabled = true;
-            //    if (_sttId[n] == null)
-            //    {
-            //        ButtonAdd.IsEnabled = false;
-            //        break;
-            //    }
-            //}
-
         }
 
         private void FillProjects(string ctgId, string nameSttId)
