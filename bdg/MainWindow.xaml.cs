@@ -325,32 +325,6 @@ namespace bdg
                         WHERE csh_id = {_sttId}";
                     db3.RunSql(sql);
                     break;
-                case "Удалить":
-                    //Проверка используется ли категория в основной таблице
-                    sql = $@"
-                        SELECT COUNT(ctg.ctg_id)
-                        FROM ctg
-                        INNER JOIN stt ON stt.ctg_id = ctg.ctg_id
-                        LEFT JOIN csh as f ON f.stt_id_from = stt.stt_id
-                        LEFT JOIN csh as t ON t.stt_id_to = stt.stt_id
-                        WHERE stt.stt_id = {_sttId[0]} or stt.stt_id = {_sttId[1]}
-                        GROUP BY ctg.ctg_id
-                        ;";
-                    string rowsCount = db3.ScalarSql(sql);
-                    if (rowsCount == "0")
-                    {
-                        //Удаление связки в stt
-                        sql = $@"DELETE FROM stt WHERE ctg_id = {ctgId}";
-                        db3.RunSql(sql);
-
-                        //Удаление категории
-                        sql = $@"DELETE FROM ctg WHERE ctg_id = {ctgId}";
-                        db3.RunSql(sql);
-                        //Заполнение DataGrid
-                        CrtFill();
-                    }
-                    db3.RunSql(sql);
-                    break;
             }
             //Обновляем гриды, переменные и текстбоксы
             Refresh();
@@ -467,7 +441,35 @@ namespace bdg
 
         private void CtgDel_Click(object sender, RoutedEventArgs e)
         {
-            ButtonAdd.Content = "Удалить";
+            DataRowView drv = (DataRowView)DataGridCrt.SelectedCells[0].Item;
+            string ss = drv.Row[1].ToString();
+            //TODO: Получил id теперь надо проверить используется в csh или нет
+            
+            //string dgr = dg.SelectedCells.ToString();
+            //Проверка используется ли категория в основной таблице
+            string sql = $@"
+                        SELECT COUNT(ctg.ctg_id)
+                        FROM ctg
+                        INNER JOIN stt ON stt.ctg_id = ctg.ctg_id
+                        LEFT JOIN csh AS f ON f.stt_id_from = stt.stt_id
+                        LEFT JOIN csh AS t ON t.stt_id_to = stt.stt_id
+                        WHERE stt.stt_id = {_sttId[0]} or stt.stt_id = {_sttId[1]}
+                        GROUP BY ctg.ctg_id
+                        ;";
+            string rowsCount = db3.ScalarSql(sql);
+            if (rowsCount == "0")
+            {
+                //Удаление связки в stt
+                sql = $@"DELETE FROM stt WHERE stt.stt_id = {_sttId[0]} OR stt.stt_id = {_sttId[1]}";
+                db3.RunSql(sql);
+
+                //Удаление категории
+                //sql = $@"DELETE FROM ctg WHERE ctg_id = {_ctgId}";
+                //db3.RunSql(sql);
+                //Заполнение DataGrid
+                CrtFill();
+            }
+            db3.RunSql(sql);
         }
 
         private void CtgNew_Click(object sender, RoutedEventArgs e)
