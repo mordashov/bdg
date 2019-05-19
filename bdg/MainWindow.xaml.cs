@@ -442,7 +442,7 @@ namespace bdg
         private void CtgDel_Click(object sender, RoutedEventArgs e)
         {
             DataRowView drv = (DataRowView)DataGridCrt.SelectedCells[0].Item;
-            string ss = drv.Row[1].ToString();
+            string ctdDelId = drv.Row[1].ToString();
             //TODO: Получил id теперь надо проверить используется в csh или нет
             
             //string dgr = dg.SelectedCells.ToString();
@@ -456,6 +456,15 @@ namespace bdg
                         WHERE stt.stt_id = {_sttId[0]} or stt.stt_id = {_sttId[1]}
                         GROUP BY ctg.ctg_id
                         ;";
+            /*
+SELECT t.stt_id_to, COUNT(ctg.ctg_id)
+FROM ctg
+JOIN stt ON stt.ctg_id = ctg.ctg_id
+LEFT JOIN csh AS f ON f.stt_id_from = stt.stt_id
+LEFT JOIN csh AS t ON t.stt_id_to = stt.stt_id
+WHERE stt.ctg_id = 28
+GROUP BY ctg.ctg_id
+             */
             string rowsCount = db3.ScalarSql(sql);
             if (rowsCount == "0")
             {
