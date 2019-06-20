@@ -84,13 +84,13 @@ namespace bdg
         }
 
 
-        private void DataGridCrt_MouseUp(object sender, MouseButtonEventArgs e)
+        private void DataGridCtg_MouseUp(object sender, MouseButtonEventArgs e)
         {
             SetCrt((DataGrid)sender);
             PrjFill();
         }
 
-        private void DataGridCrt_KeyUp(object sender, KeyEventArgs e)
+        private void DataGridCtg_KeyUp(object sender, KeyEventArgs e)
         {
             SetCrt((DataGrid)sender);
             PrjFill();
@@ -260,14 +260,14 @@ namespace bdg
             if (TextBoxSum.Text == "0.00")
                 TextBoxSum.Text = null;
         }
-        private void dataGridCrt_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
+        private void DataGridCtg_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
             //TextBox newValue = e.EditingElement as TextBox;
             //string oldValue = db3.CtgText;
             //if (newValue != null && newValue.Text != oldValue)
             //{
-            //    string id = ((DataRowView)DataGridCrt.SelectedItem).Row["ctg_id"].ToString();
-            //    string nm = ((DataRowView)DataGridCrt.SelectedItem).Row["ctg_nm"].ToString();
+            //    string id = ((DataRowView)DataGridCtg.SelectedItem).Row["ctg_id"].ToString();
+            //    string nm = ((DataRowView)DataGridCtg.SelectedItem).Row["ctg_nm"].ToString();
             //    if (nm == oldValue) nm = newValue.Text;
             //    //Обновляю в базе
             //    string sql = $@"
@@ -280,7 +280,7 @@ namespace bdg
 
         private void CtgDel_Click(object sender, RoutedEventArgs e)
         {
-            //            DataRowView drv = (DataRowView)DataGridCrt.SelectedCells[0].Item;
+            //            DataRowView drv = (DataRowView)DataGridCtg.SelectedCells[0].Item;
             //            string ctdDelId = drv.Row[1].ToString();
             //            //TODO: Получил id теперь надо проверить используется в csh или нет
 

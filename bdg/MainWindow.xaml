@@ -50,13 +50,13 @@
             ItemsSource="{Binding}" 
             AutoGenerateColumns="False" 
             Width="215" 
-            CellEditEnding="dataGridCrt_CellEditEnding" 
+            CellEditEnding="DataGridCtg_CellEditEnding" 
             GridLinesVisibility="Horizontal" 
             HorizontalGridLinesBrush="Gray" 
             FontSize="16" 
             CanUserAddRows="False" 
-            MouseUp="DataGridCrt_MouseUp" 
-            KeyUp="DataGridCrt_KeyUp" SelectionMode="Single">
+            MouseUp="DataGridCtg_MouseUp" 
+            KeyUp="DataGridCtg_KeyUp" SelectionMode="Single">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID" Binding="{Binding ctg_id}" Visibility="Collapsed" />
                 <DataGridTextColumn Header="Категория" Binding="{Binding ctg_nm}" Width="180"/>
