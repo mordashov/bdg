@@ -444,14 +444,8 @@ namespace bdg
             _csh = new Csh();
             _csh.Fill(DataGridCsh);
             ButtonAdd.Content = "Добавить";
-            //CshFill();
             //Заполняю критерии
-            _ctg = new Ctg();
-            _ctg.Fill(DataGridCtg);
-
-
-
-            //CrtFill();
+            _ctg = new Ctg(DataGridCtg);
             //Обнуляем переменные и сумму
             ButtonAdd.IsEnabled = false;
             TextBoxSum.Text = "0.00";
