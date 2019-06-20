@@ -14,81 +14,86 @@ namespace bdg
 {
     class db3work
     {
-        public string CtgId { get; set; } // Критерий временный
-        public string CtgText { get; set; } //Критерий наименование временный
-        public string PrjId { get; set; } // Проект временный
-        public string PrjText { get; set; } //Проект наименование временный
-        public string CtgIdFrom { get; set; } // Критерий откуда
-        public string CtgIdTo { get; set; } // Критерий куда
-        public string PrjIdFrom { get; set; } // Проект откуда
-        public string PrjIdTo { get; set; } // Проект куда
-        public string CshId { get; set; } // ID таблицы с расходами
-        public string SttIdFrom { get; set; } // Статья расходов (откуда)
-        public string SttIdTo { get; set; } // Статья расходов (куда)
+        private string _pathToBdg = Environment.CurrentDirectory + @"\bdg.db3";
+        private string _msg;
+        private SQLiteConnection _conn;
+        private SQLiteCommand _comm;
+        private string _sql;
 
-        public SQLiteConnection ConnectDb3()
+        public db3work(string sql)
         {
-            string bdg = Environment.CurrentDirectory + @"\bdg.db3";
-
-            if (!File.Exists(bdg))
+            _sql = sql;
+            _msg = "Нет файла базы данные \n" + _pathToBdg;
+            if (!File.Exists(_pathToBdg))
             {
-                MessageBox.Show(
-                    "Не могу найти фал базы данных.\n" +
-                    "Он должен находиться в одной папке с исполняемым файлом: \n" +
-                    Environment.CurrentDirectory);
+                MessageBox.Show(_msg);
                 Environment.Exit(0);
             }
 
-            string strConnect = $@"Data Source={bdg}; Version=3;";
+            ConnectDb3();
+        }
+
+        private void ConnectDb3()
+        {
+
+            string strConnect = $@"Data Source={_pathToBdg}; Version=3;";
             SQLiteConnection conn = new SQLiteConnection(strConnect);
 
             try
             {
                 conn.Open();
+                _conn = conn;
+                CommandDb3();
             }
             catch (SQLiteException ex)
             {
                 MessageBox.Show(ex.Message);
                 Environment.Exit(0);
             }
-            return conn;
         }
-        public void RunSql(string sql)
+
+        private void CommandDb3()
         {
-            SQLiteConnection conn = ConnectDb3();
-            SQLiteCommand cmd = new SQLiteCommand(conn);
-            cmd.CommandText = sql;
-            cmd.ExecuteNonQuery();
-            conn.Dispose();
+            SQLiteCommand cmd = new SQLiteCommand(_conn);
+            cmd.CommandText = _sql;
+            _comm = cmd;
         }
-        public DataTable SelectSql(string sql)
+
+        public void RunSql()
         {
-            SQLiteConnection conn = ConnectDb3();
-            SQLiteCommand cmd = new SQLiteCommand(conn);
-            cmd.CommandText = sql;
-            SQLiteDataReader reader = cmd.ExecuteReader();
+            _comm.ExecuteNonQuery();
+        }
+
+        public DataTable SelectSql()
+        {
+            SQLiteDataReader reader = _comm.ExecuteReader();
 
             DataTable table = new DataTable();
             table.Load(reader);
             return table;
         }
-        public string ScalarSql(string sql)
+
+        public string ScalarSql()
         {
-            SQLiteConnection conn = ConnectDb3();
-            SQLiteCommand cmd = new SQLiteCommand(conn);
-            cmd.CommandText = sql;
-            string value;
-            try
+            return _comm.ExecuteScalar().ToString();
+        }
+
+        public Dictionary<int, string> ValuesRow()
+        {
+            //TODO: Сделать проверку на кол-во строк, если больше одной, возвращаем ошибку
+            Dictionary<int, string> dic = new Dictionary<int, string>();
+            SQLiteDataReader rd = _comm.ExecuteReader();
+
+            if (rd.StepCount != 1)
             {
-                cmd.ExecuteScalar().ToString();
+                string msg = $"Ошибка! Метод вернул {rd.StepCount.ToString()} строк";
+                return null;
             }
-            catch
+            for (int i = 0; i < rd.FieldCount; i++)
             {
-                value = "0";
-                return value;
+                dic.Add(int.Parse(rd[i].ToString()), rd.GetName(i));
             }
-            value = cmd.ExecuteScalar().ToString();
-            return value;
+            return dic;
         }
     }
 }

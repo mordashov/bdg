@@ -41,14 +41,14 @@
         </StackPanel>
         <!--Content="{StaticResource Refresh}"-->
         <DataGrid 
-            x:Name="DataGridCrt" 
+            x:Name="DataGridCtg" 
             HorizontalAlignment="Left" 
-            Margin="20,0,0,0" 
+            Margin="20,0,0,215.6" 
             Grid.Row="3" 
             Grid.Column="0" 
-            VerticalAlignment="Top" 
+            VerticalAlignment="Bottom" 
             ItemsSource="{Binding}" 
-            AutoGenerateColumns="False" 
+            AutoGenerateColumns="True" 
             Width="215" 
             CellEditEnding="dataGridCrt_CellEditEnding" 
             GridLinesVisibility="Horizontal" 
