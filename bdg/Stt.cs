@@ -20,6 +20,8 @@ namespace bdg
         {
             CtgId = ctg.CtgId;
             CtgName = ctg.CtgName;
+            NameField = "stt_id_from";
+            if (ctg.CtgField == "ctg_id_to") NameField = "stt_id_to";
 
             if (prj_id != null)
             {

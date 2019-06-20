@@ -22,32 +22,33 @@ namespace bdg
 
         private Stt _sttIdTo;
         private Stt _sttIdFrom;
+        private Stt _stt;
         private Csh _csh;
         private Ctg _ctg;
 
 
         private void PrjFill()
         {
-            string sttName = "";
-            string ctgId = "";
-            try
-            {
-                sttName = _sttIdTo.NameField;
-                ctgId = _sttIdTo.CtgId;
+            //string sttName = "";
+            //string ctgId = "";
+            //try
+            //{
+            //    sttName = _sttIdTo.NameField;
+            //    ctgId = _sttIdTo.CtgId;
 
-            }
-            catch (Exception)
-            {
-                //ignore
-            }
+            //}
+            //catch (Exception)
+            //{
+            //    //ignore
+            //}
 
-            if (TextBoxFrom.IsSelectionActive)
-            {
-                sttName = _sttIdFrom.NameField;
-                ctgId = _sttIdFrom.CtgId;
-            }
+            //if (TextBoxFrom.IsSelectionActive)
+            //{
+            //    sttName = _ctg.CtgField;
+            //    ctgId = _ctg.CtgId;
+            //}
 
-            string subSql = $"SUM(CASE c.ctg_id WHEN {ctgId} THEN 1 ELSE 0 END)";
+            string subSql = $"SUM(CASE c.ctg_id WHEN {_stt.CtgId} THEN 1 ELSE 0 END)";
             string sql = $@"
                             SELECT p.prj_id, prj_nm, 
                                 {subSql} AS ctg_id,
@@ -55,7 +56,7 @@ namespace bdg
                             FROM prj p
                             JOIN stt s ON s.prj_id = p.prj_id
                             JOIN ctg c ON c.ctg_id = s.ctg_id
-                            JOIN csh h ON h.{sttName} = s.stt_id
+                            JOIN csh h ON h.{_stt.NameField} = s.stt_id
                             GROUP BY p.prj_id, p.prj_nm
                             ORDER BY {subSql} DESC, prj_nm;
                             ";
@@ -68,12 +69,12 @@ namespace bdg
             if (TextBoxTo.IsSelectionActive)
             {
                 Ctg ctg = new Ctg(dataGrid, TextBoxTo);
-                _sttIdTo = new Stt(ctg);
+                _stt = new Stt(ctg);
             }
             if (TextBoxFrom.IsSelectionActive) 
             {
-                Ctg ctg = new Ctg(dataGrid, TextBoxTo);
-                _sttIdTo = new Stt(ctg);
+                Ctg ctg = new Ctg(dataGrid, TextBoxFrom);
+                _stt = new Stt(ctg);
             }
             else
             {
@@ -445,7 +446,8 @@ namespace bdg
             _csh.Fill(DataGridCsh);
             ButtonAdd.Content = "Добавить";
             //Заполняю критерии
-            _ctg = new Ctg(DataGridCtg);
+            _ctg = new Ctg(DataGridCtg, TextBoxFrom);
+            _stt = new Stt(_ctg);
             //Обнуляем переменные и сумму
             ButtonAdd.IsEnabled = false;
             TextBoxSum.Text = "0.00";

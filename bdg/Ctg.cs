@@ -10,31 +10,34 @@ namespace bdg
 {
     class Ctg
     {
-        private DataGrid _dataGrid;
+        //private DataGrid _dataGrid;
         public string CtgId { get; set; }
         public string CtgName { get; set; }
         public string CtgField { get; set; }
 
-        public void Fill()
+        public void Fill(DataGrid dataGrid)
         {
             string sql = @"SELECT [ctg_id] ,[ctg_nm] FROM [ctg] ORDER BY [ctg_nm]";
             DataTable table = new db3work(sql).SelectSql();
-            _dataGrid.DataContext = table.DefaultView;
-            if (_dataGrid.Items.Count != 0)
+            dataGrid.DataContext = table.DefaultView;
+            if (dataGrid.Items.Count != 0)
             {
-                _dataGrid.SelectedIndex = 0;
-                _dataGrid.ScrollIntoView(_dataGrid.Items[0]);
+                dataGrid.SelectedIndex = 0;
+                dataGrid.ScrollIntoView(dataGrid.Items[0]);
             }
         }
         public Ctg(DataGrid dataGrid)
         {
-            _dataGrid = dataGrid;
-            this.Fill();
         }
 
         public Ctg(DataGrid dataGrid, TextBox textBox)
         {
             DataRowView drv = (DataRowView)dataGrid.SelectedItem;
+            if (drv == null)
+            {
+                this.Fill(dataGrid);
+                return;
+            }
             CtgId = drv.Row[0].ToString();
             if (textBox.Name == "TextBoxFrom")
             {
