@@ -27,12 +27,6 @@ namespace bdg
         private Ctg _ctg;
         private Prj _prj;
 
-
-        private void PrjFill()
-        {
-         
-        }
-
         private void SetCrt(DataGrid dataGrid)
         {
             if (TextBoxTo.IsSelectionActive)
@@ -53,28 +47,23 @@ namespace bdg
 
         }
 
-
         private void DataGridCtg_MouseUp(object sender, MouseButtonEventArgs e)
         {
             SetCrt((DataGrid)sender);
             _prj.Fill(_stt, DataGridPrj);
-            //PrjFill();
         }
 
         private void DataGridCtg_KeyUp(object sender, KeyEventArgs e)
         {
             SetCrt((DataGrid)sender);
             _prj.Fill(_stt, DataGridPrj);
-
-            //PrjFill();
         }
 
         private void DataGridPrjSelect() //Изменение выбора в проектах
         {
-            //DataRowView drv = (DataRowView)DataGridPrj.SelectedItem;
-            //string prjId = drv.Row[0].ToString();
-            //string prjTxt = drv.Row[1].ToString();
-
+            DataRowView drv = (DataRowView)DataGridPrj.SelectedItem;
+            _prj.PrjId = drv.Row[0].ToString();
+            _stt = new Stt(_ctg, _prj);
             //Csh csh = new Csh();
             //GetStt(DataGridPrj);
             //TextBoxSumFrom.Text = csh.GetTotalSum(_sttId[0]);

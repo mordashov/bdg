@@ -10,8 +10,18 @@ namespace bdg
 {
     class Prj
     {
+        private string _prjId;
+
         //private Ctg _ctg;
-        public string PrjId { get; set; }
+        public string PrjId
+        {
+            get => _prjId; set
+            {
+                _prjId = value;
+                string sql = "SELECT prj_nm FROM prj WHERE prj_id = " + PrjId;
+                PrjName = new db3work(sql).ScalarSql();
+            }
+        }
         public string PrjName { get; set; }
         public string PrjField { get; set; }
 

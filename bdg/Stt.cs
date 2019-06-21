@@ -9,35 +9,34 @@ namespace bdg
     class Stt
     {
         private string _sql;
+        private Ctg _ctg;
         public string CtgId { get; set; } // Критерий
         public string CtgName { get; set; } //Критерий наименование
         public string PrjId { get; set; } // Проект
         public string PrjName { get; set; } //Проект наименование
-        public string Result { get; set; }
+        public string SttId { get; set; }
         public string NameField { get; set; }
 
-        public Stt (Ctg ctg, string prj_id = null)
+        public Stt(Ctg ctg)
+        {
+            InitCtg(ctg);
+        }
+
+        public Stt(Ctg ctg, Prj prj)
+        {
+            InitCtg(ctg);
+            PrjId = prj.PrjId;
+            PrjName = prj.PrjName;
+            _sql = $"SELECT stt_id FROM stt WHERE ctg_id = {CtgId} AND prj_id = {PrjId}";
+            SttId = new db3work(_sql).ScalarSql();
+        }
+
+        public void InitCtg(Ctg ctg)
         {
             CtgId = ctg.CtgId;
             CtgName = ctg.CtgName;
             NameField = "stt_id_from";
             if (ctg.CtgField == "ctg_id_to") NameField = "stt_id_to";
-
-            if (prj_id != null)
-            {
-                _sql = "SELECT prj_nm FROM prj WHERE prj_id = " + prj_id;
-                PrjId = prj_id;
-                PrjName = new db3work(_sql).ScalarSql();
-            }
-
-            if (prj_id != null && ctg !=null)
-            {
-                _sql = $"SELECT stt_id FROM stt WHERE ctg_id = {ctg} AND prj_id = {prj_id}";
-                Result = new db3work(_sql).ScalarSql();
-            }
-
-
         }
-
     }
 }
