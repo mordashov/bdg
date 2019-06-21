@@ -151,6 +151,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Ctg.cs" />
+    <Compile Include="Prj.cs" />
     <Compile Include="Stt.cs" />
     <Compile Include="db3work.cs" />
     <Compile Include="SQLite.cs" />

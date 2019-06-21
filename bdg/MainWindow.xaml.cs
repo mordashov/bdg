@@ -25,43 +25,12 @@ namespace bdg
         private Stt _stt;
         private Csh _csh;
         private Ctg _ctg;
+        private Prj _prj;
 
 
         private void PrjFill()
         {
-            //string sttName = "";
-            //string ctgId = "";
-            //try
-            //{
-            //    sttName = _sttIdTo.NameField;
-            //    ctgId = _sttIdTo.CtgId;
-
-            //}
-            //catch (Exception)
-            //{
-            //    //ignore
-            //}
-
-            //if (TextBoxFrom.IsSelectionActive)
-            //{
-            //    sttName = _ctg.CtgField;
-            //    ctgId = _ctg.CtgId;
-            //}
-
-            string subSql = $"SUM(CASE c.ctg_id WHEN {_stt.CtgId} THEN 1 ELSE 0 END)";
-            string sql = $@"
-                            SELECT p.prj_id, prj_nm, 
-                                {subSql} AS ctg_id,
-                                CASE {subSql} WHEN 0 THEN 0 ELSE 1 END AS color 
-                            FROM prj p
-                            JOIN stt s ON s.prj_id = p.prj_id
-                            JOIN ctg c ON c.ctg_id = s.ctg_id
-                            JOIN csh h ON h.{_stt.NameField} = s.stt_id
-                            GROUP BY p.prj_id, p.prj_nm
-                            ORDER BY {subSql} DESC, prj_nm;
-                            ";
-            DataTable dt = new db3work(sql).SelectSql();
-            DataGridPrj.DataContext = dt;
+         
         }
 
         private void SetCrt(DataGrid dataGrid)
@@ -88,13 +57,16 @@ namespace bdg
         private void DataGridCtg_MouseUp(object sender, MouseButtonEventArgs e)
         {
             SetCrt((DataGrid)sender);
-            PrjFill();
+            _prj.Fill(_stt, DataGridPrj);
+            //PrjFill();
         }
 
         private void DataGridCtg_KeyUp(object sender, KeyEventArgs e)
         {
             SetCrt((DataGrid)sender);
-            PrjFill();
+            _prj.Fill(_stt, DataGridPrj);
+
+            //PrjFill();
         }
 
         private void DataGridPrjSelect() //Изменение выбора в проектах
@@ -447,6 +419,7 @@ namespace bdg
             ButtonAdd.Content = "Добавить";
             //Заполняю критерии
             _ctg = new Ctg(DataGridCtg, TextBoxFrom);
+            _prj = new Prj(_ctg);
             _stt = new Stt(_ctg);
             //Обнуляем переменные и сумму
             ButtonAdd.IsEnabled = false;
