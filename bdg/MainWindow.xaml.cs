@@ -27,35 +27,35 @@ namespace bdg
         private Ctg _ctg;
         private Prj _prj;
 
-        private void SetCrt(DataGrid dataGrid)
+        private void SetCtg(DataGrid dataGrid)
         {
-            if (TextBoxTo.IsSelectionActive)
+            if (TextBoxTo.IsFocused)
             {
-                Ctg ctg = new Ctg(dataGrid, TextBoxTo);
-                _stt = new Stt(ctg);
+                _ctg = new Ctg(dataGrid, TextBoxTo);
+                _stt = new Stt(_ctg);
             }
-            if (TextBoxFrom.IsSelectionActive) 
+            if (TextBoxFrom.IsFocused) 
             {
-                Ctg ctg = new Ctg(dataGrid, TextBoxFrom);
-                _stt = new Stt(ctg);
+                _ctg = new Ctg(dataGrid, TextBoxFrom);
+                _stt = new Stt(_ctg);
             }
             else
             {
                 TextBoxFrom.Focus();
-                SetCrt(dataGrid);
+                SetCtg(dataGrid);
             }
 
         }
 
         private void DataGridCtg_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            SetCrt((DataGrid)sender);
+            SetCtg((DataGrid)sender);
             _prj.Fill(_stt, DataGridPrj);
         }
 
         private void DataGridCtg_KeyUp(object sender, KeyEventArgs e)
         {
-            SetCrt((DataGrid)sender);
+            SetCtg((DataGrid)sender);
             _prj.Fill(_stt, DataGridPrj);
         }
 
@@ -64,31 +64,40 @@ namespace bdg
             DataRowView drv = (DataRowView)DataGridPrj.SelectedItem;
             _prj.PrjId = drv.Row[0].ToString();
             _stt = new Stt(_ctg, _prj);
-            //Csh csh = new Csh();
-            //GetStt(DataGridPrj);
-            //TextBoxSumFrom.Text = csh.GetTotalSum(_sttId[0]);
-            //TextBoxSumTo.Text = GetTotalSum(_sttId[1]);
+            _csh = new Csh();
+            if (_prj.PrjField == "prj_id_from")
+            {
+                _csh.SttIdFrom = _stt;
+                TextBoxSumFrom.Text = _csh.GetTotalSum(_csh.SttIdFrom);
+            }
+            if (_prj.PrjField == "prj_id_to")
+            {
+                _csh.SttIdTo = _stt;
+                TextBoxSumTo.Text = _csh.GetTotalSum(_csh.SttIdTo);
+            }
         }
 
         private void DataGridPrj_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            //DataGridPrjSelect();
+            DataGridPrjSelect();
         }
 
         private void DataGridPrj_KeyUp(object sender, KeyEventArgs e)
         {
-            //DataGridPrjSelect();
+            DataGridPrjSelect();
         }
 
         private void textBoxTo_GotFocus(object sender, RoutedEventArgs e)
         {
             //_activeTextBox = ((TextBox)sender).Name;
+            ((TextBox)sender).Focus();
         }
 
         private void textBoxFrom_GotFocus(object sender, RoutedEventArgs e)
         {
             //db3.PrjIdTo = "%";
             //_activeTextBox = ((TextBox)sender).Name;
+            ((TextBox)sender).Focus();
         }
 
 

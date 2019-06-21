@@ -11,8 +11,8 @@ namespace bdg
     {
         public Stt _ctgPrj;
         public string CshId { get; set; }
-        public string SttIdFrom { get; set; }
-        public string SttIdTo { get; set; }
+        public Stt SttIdFrom { get; set; }
+        public Stt SttIdTo { get; set; }
         public string CshSum { get; set; }
         public string CshPln { get; set; }
         public string CshNote { get; set; }
@@ -24,16 +24,23 @@ namespace bdg
             return db;
         }
 
-        private string GetTotalSum(string sttId)
+        public string GetTotalSum(Stt stt)
         {
             // Получаю остаток по Дт и Кт
-            string[] nameStt = new string[2];
-            nameStt[0] = "stt_id_to";
-            nameStt[1] = "stt_id_from";
+
+            List<string> nameStt = new List<string>();
+            if (SttIdFrom != null) nameStt.Add("stt_id_from");
+            if (SttIdTo != null) nameStt.Add("stt_id_to");
+
+            //string[] nameStt = new string[2];
+            //nameStt[0] = "stt_id_to";
+            //nameStt[1] = "stt_id_from";
 
             double[] sum = new double[2];
+            sum[0] = 0;
+            sum[1] = 0;
 
-            for (int i = 0; i < nameStt.Length; i++)
+            for (int i = 0; i < nameStt.Count; i++)
             {
                 string sql = $@"
                             SELECT 
@@ -42,7 +49,7 @@ namespace bdg
                               INNER JOIN stt ON stt.stt_id = csh.{nameStt[i]}
                               INNER JOIN ctg ON ctg.ctg_id = stt.ctg_id
                               INNER JOIN prj ON prj.prj_id = stt.prj_id
-                              WHERE stt.stt_id = '{sttId}'
+                              WHERE stt.stt_id = '{stt.SttId}'
                               GROUP BY ctg.ctg_id";
                 sum[i] = double.Parse(new db3work(sql).ScalarSql());
             }

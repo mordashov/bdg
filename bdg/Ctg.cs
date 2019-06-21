@@ -48,9 +48,9 @@ namespace bdg
             {
                 CtgField = "ctg_id_to";
             }
-            textBox.Text = CtgName;
             string sql = "SELECT ctg_nm FROM ctg WHERE ctg_id = " + CtgId;
             CtgName = new db3work(sql).ScalarSql();
+            textBox.Text = CtgName;
         }
 
     }
