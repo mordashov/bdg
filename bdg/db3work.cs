@@ -75,7 +75,16 @@ namespace bdg
 
         public string ScalarSql()
         {
-            return _comm.ExecuteScalar().ToString();
+            string res;
+            try
+            {
+                res = _comm.ExecuteScalar().ToString();
+            }
+            catch
+            {
+                res = null;
+            }
+            return res;
         }
 
         public Dictionary<int, string> ValuesRow()

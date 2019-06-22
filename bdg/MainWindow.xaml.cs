@@ -20,16 +20,14 @@ namespace bdg
     public partial class MainWindow
     {
 
-        private Stt _sttIdTo;
-        private Stt _sttIdFrom;
         private Stt _stt;
-        private Csh _csh;
+        private Csh _csh = new Csh();
         private Ctg _ctg;
         private Prj _prj;
         private bool _textBoxFromIsFocused = false;
         private bool _textBoxToIsFocused = false;
 
-        private void SetCtg(DataGrid dataGrid)
+        private void CtgSelect(DataGrid dataGrid)
         {
             if (_textBoxToIsFocused)
             {
@@ -41,50 +39,69 @@ namespace bdg
                 _ctg = new Ctg(dataGrid, TextBoxFrom);
                 _stt = new Stt(_ctg);
             }
+            ButtonAdd.IsEnabled = false;
+
 
         }
 
         private void DataGridCtg_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            SetCtg((DataGrid)sender);
+            CtgSelect((DataGrid)sender);
             _prj.Fill(_stt, DataGridPrj);
         }
 
         private void DataGridCtg_KeyUp(object sender, KeyEventArgs e)
         {
-            SetCtg((DataGrid)sender);
+            CtgSelect((DataGrid)sender);
             _prj.Fill(_stt, DataGridPrj);
         }
 
-        private void DataGridPrjSelect() //Изменение выбора в проектах
+        private void PrjSelect() //Изменение выбора в проектах
         {
             DataRowView drv = (DataRowView)DataGridPrj.SelectedItem;
             _prj.PrjId = drv.Row[0].ToString();
             _stt = new Stt(_ctg, _prj);
-            _csh = new Csh();
+
+            string toFullname = "";
+            string fromFullName = "";
+
             switch (_stt.NameField)
             {
                 case "stt_id_from":
                     _csh.SttIdFrom = _stt;
                     TextBoxSumFrom.Text = _csh.GetTotalSum(_csh.SttIdFrom);
                     TextBoxFrom.Text = _csh.SttIdFrom.SttName;
+                    TextBoxTo.Focus();
                     break;
                 case "stt_id_to":
                     _csh.SttIdTo = _stt;
                     TextBoxSumTo.Text = _csh.GetTotalSum(_csh.SttIdTo);
                     TextBoxTo.Text = _csh.SttIdTo.SttName;
+                    TextBoxSum.Focus();
                     break;
+            }
+            try
+            {
+                if (_csh.SttIdFrom.SttName != "" && _csh.SttIdTo.SttName != "")
+                {
+                    ButtonAdd.IsEnabled = true;
+                }
+
+            }
+            catch
+            {
+                ButtonAdd.IsEnabled = false;
             }
         }
 
         private void DataGridPrj_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            DataGridPrjSelect();
+            PrjSelect();
         }
 
         private void DataGridPrj_KeyUp(object sender, KeyEventArgs e)
         {
-            DataGridPrjSelect();
+            PrjSelect();
         }
 
         private void textBoxTo_GotFocus(object sender, RoutedEventArgs e)
@@ -95,11 +112,9 @@ namespace bdg
 
         private void textBoxFrom_GotFocus(object sender, RoutedEventArgs e)
         {
-            //db3.PrjIdTo = "%";
             _textBoxToIsFocused = false;
             _textBoxFromIsFocused = true;
         }
-
 
         private void buttonAdd_Click(object sender, RoutedEventArgs e) //Добавление/изменение данных в csh
         {

@@ -27,30 +27,27 @@ namespace bdg
         {
             // Получаю остаток по Дт и Кт
 
-            List<string> nameStt = new List<string>();
-            if (SttIdFrom != null) nameStt.Add("stt_id_from");
-            if (SttIdTo != null) nameStt.Add("stt_id_to");
+            //List<string> nameStt = new List<string>();
+            //if (SttIdFrom != null) nameStt.Add("stt_id_from");
+            //if (SttIdTo != null) nameStt.Add("stt_id_to");
 
-            //string[] nameStt = new string[2];
-            //nameStt[0] = "stt_id_to";
-            //nameStt[1] = "stt_id_from";
+            string[] nameStt = new string[2];
+            nameStt[0] = "stt_id_to";
+            nameStt[1] = "stt_id_from";
 
             double[] sum = new double[2];
-            sum[0] = 0;
-            sum[1] = 0;
 
-            for (int i = 0; i < nameStt.Count; i++)
+            for (int i = 0; i < nameStt.Length; i++)
             {
                 string sql = $@"
-                            SELECT 
-                                  SUM([csh_sum])
-                              FROM [csh]
-                              INNER JOIN stt ON stt.stt_id = csh.{nameStt[i]}
-                              INNER JOIN ctg ON ctg.ctg_id = stt.ctg_id
-                              INNER JOIN prj ON prj.prj_id = stt.prj_id
-                              WHERE stt.stt_id = '{stt.SttId}'
-                              GROUP BY ctg.ctg_id";
-                sum[i] = double.Parse(new db3work(sql).ScalarSql());
+                            SELECT SUM([csh_sum])
+                            FROM [csh]
+                            WHERE {nameStt[i]} = '{stt.SttId}'
+                            GROUP BY {nameStt[i]}";
+                string resSql = new db3work(sql).ScalarSql();
+                resSql = resSql ?? "0";
+                double res = double.Parse(resSql);
+                sum[i] = res;
             }
 
             return $"{sum[0] - sum[1]:C}";
