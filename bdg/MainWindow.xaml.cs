@@ -26,23 +26,20 @@ namespace bdg
         private Csh _csh;
         private Ctg _ctg;
         private Prj _prj;
+        private bool _textBoxFromIsFocused = false;
+        private bool _textBoxToIsFocused = false;
 
         private void SetCtg(DataGrid dataGrid)
         {
-            if (TextBoxTo.IsFocused)
+            if (_textBoxToIsFocused)
             {
                 _ctg = new Ctg(dataGrid, TextBoxTo);
                 _stt = new Stt(_ctg);
             }
-            if (TextBoxFrom.IsFocused) 
+            if (_textBoxFromIsFocused) 
             {
                 _ctg = new Ctg(dataGrid, TextBoxFrom);
                 _stt = new Stt(_ctg);
-            }
-            else
-            {
-                TextBoxFrom.Focus();
-                SetCtg(dataGrid);
             }
 
         }
@@ -65,15 +62,17 @@ namespace bdg
             _prj.PrjId = drv.Row[0].ToString();
             _stt = new Stt(_ctg, _prj);
             _csh = new Csh();
-            if (_prj.PrjField == "prj_id_from")
+            if (_stt.NameField == "stt_id_from")
             {
                 _csh.SttIdFrom = _stt;
                 TextBoxSumFrom.Text = _csh.GetTotalSum(_csh.SttIdFrom);
+                TextBoxFrom.Text = _csh.SttIdFrom.SttName;
             }
-            if (_prj.PrjField == "prj_id_to")
+            if (_stt.NameField == "stt_id_to")
             {
                 _csh.SttIdTo = _stt;
                 TextBoxSumTo.Text = _csh.GetTotalSum(_csh.SttIdTo);
+                TextBoxTo.Text = _csh.SttIdTo.SttName;
             }
         }
 
@@ -89,15 +88,15 @@ namespace bdg
 
         private void textBoxTo_GotFocus(object sender, RoutedEventArgs e)
         {
-            //_activeTextBox = ((TextBox)sender).Name;
-            ((TextBox)sender).Focus();
+            _textBoxToIsFocused = true;
+            _textBoxFromIsFocused = false;
         }
 
         private void textBoxFrom_GotFocus(object sender, RoutedEventArgs e)
         {
             //db3.PrjIdTo = "%";
-            //_activeTextBox = ((TextBox)sender).Name;
-            ((TextBox)sender).Focus();
+            _textBoxToIsFocused = false;
+            _textBoxFromIsFocused = true;
         }
 
 

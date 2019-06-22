@@ -18,7 +18,7 @@ namespace bdg
             get => _prjId; set
             {
                 _prjId = value;
-                string sql = "SELECT prj_nm FROM prj WHERE prj_id = " + PrjId;
+                string sql = "SELECT prj_nm FROM prj WHERE prj_id = " + _prjId;
                 PrjName = new db3work(sql).ScalarSql();
             }
         }

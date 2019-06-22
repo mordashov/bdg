@@ -15,6 +15,7 @@ namespace bdg
         public string PrjId { get; set; } // Проект
         public string PrjName { get; set; } //Проект наименование
         public string SttId { get; set; }
+        public string SttName { get; set; }
         public string NameField { get; set; }
 
         public Stt(Ctg ctg)
@@ -29,6 +30,7 @@ namespace bdg
             PrjName = prj.PrjName;
             _sql = $"SELECT stt_id FROM stt WHERE ctg_id = {CtgId} AND prj_id = {PrjId}";
             SttId = new db3work(_sql).ScalarSql();
+            SttName = CtgName + " / " + PrjName;
         }
 
         public void InitCtg(Ctg ctg)
