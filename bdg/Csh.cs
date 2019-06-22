@@ -9,7 +9,6 @@ namespace bdg
 {
     class Csh
     {
-        public Stt _ctgPrj;
         public string CshId { get; set; }
         public Stt SttIdFrom { get; set; }
         public Stt SttIdTo { get; set; }

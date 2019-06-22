@@ -12,7 +12,6 @@ namespace bdg
     {
         private string _prjId;
 
-        //private Ctg _ctg;
         public string PrjId
         {
             get => _prjId; set

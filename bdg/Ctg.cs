@@ -10,7 +10,6 @@ namespace bdg
 {
     class Ctg
     {
-        //private DataGrid _dataGrid;
         public string CtgId { get; set; }
         public string CtgName { get; set; }
         public string CtgField { get; set; }

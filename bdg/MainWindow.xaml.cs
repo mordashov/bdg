@@ -62,17 +62,18 @@ namespace bdg
             _prj.PrjId = drv.Row[0].ToString();
             _stt = new Stt(_ctg, _prj);
             _csh = new Csh();
-            if (_stt.NameField == "stt_id_from")
+            switch (_stt.NameField)
             {
-                _csh.SttIdFrom = _stt;
-                TextBoxSumFrom.Text = _csh.GetTotalSum(_csh.SttIdFrom);
-                TextBoxFrom.Text = _csh.SttIdFrom.SttName;
-            }
-            if (_stt.NameField == "stt_id_to")
-            {
-                _csh.SttIdTo = _stt;
-                TextBoxSumTo.Text = _csh.GetTotalSum(_csh.SttIdTo);
-                TextBoxTo.Text = _csh.SttIdTo.SttName;
+                case "stt_id_from":
+                    _csh.SttIdFrom = _stt;
+                    TextBoxSumFrom.Text = _csh.GetTotalSum(_csh.SttIdFrom);
+                    TextBoxFrom.Text = _csh.SttIdFrom.SttName;
+                    break;
+                case "stt_id_to":
+                    _csh.SttIdTo = _stt;
+                    TextBoxSumTo.Text = _csh.GetTotalSum(_csh.SttIdTo);
+                    TextBoxTo.Text = _csh.SttIdTo.SttName;
+                    break;
             }
         }
 

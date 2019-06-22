@@ -8,8 +8,6 @@ namespace bdg
 {
     class Stt
     {
-        private string _sql;
-        private Ctg _ctg;
         public string CtgId { get; set; } // Критерий
         public string CtgName { get; set; } //Критерий наименование
         public string PrjId { get; set; } // Проект
@@ -28,8 +26,8 @@ namespace bdg
             InitCtg(ctg);
             PrjId = prj.PrjId;
             PrjName = prj.PrjName;
-            _sql = $"SELECT stt_id FROM stt WHERE ctg_id = {CtgId} AND prj_id = {PrjId}";
-            SttId = new db3work(_sql).ScalarSql();
+            string sql = $"SELECT stt_id FROM stt WHERE ctg_id = {CtgId} AND prj_id = {PrjId}";
+            SttId = new db3work(sql).ScalarSql();
             SttName = CtgName + " / " + PrjName;
         }
 
