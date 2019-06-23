@@ -3,16 +3,38 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace bdg
 {
     class Csh
     {
+        private string _cshSum;
+
         public string CshId { get; set; }
         public Stt SttIdFrom { get; set; }
         public Stt SttIdTo { get; set; }
-        public string CshSum { get; set; }
+        public string CshSum
+        {
+            get => _cshSum; set
+            {
+                value = value.Replace(",", ".");
+                value = value.Replace(" ", "");
+                try
+                {
+                    //Для парсера меняю точку на запятую(в системе разделитель запятая)
+                    double d = double.Parse(value.Replace(".", ","));
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("Неверная сумма!");
+                }
+
+                _cshSum = value;
+            }
+        }
+        public DateTime CshData { get; set; }
         public string CshPln { get; set; }
         public string CshNote { get; set; }
 
@@ -78,6 +100,35 @@ namespace bdg
             dataGrid.DataContext = table.DefaultView;
         }
 
+        public void Add()
+        {
+            string sql;
+            sql = $@"
+                    INSERT INTO csh
+                    (csh_dt, stt_id_from, stt_id_to, csh_sum, csh_pln, csh_note)
+                    VALUES(
+                        '{CshData:yyyy-MM-dd}'
+                        ,{SttIdFrom.SttId}
+                        ,{SttIdTo.SttId}
+                        ,{CshSum}
+                        ,IFNULL({CshPln},0)
+                        ,'{CshNote}'
+                    );";
+            new db3work(sql).RunSql();
+        }
 
+        public void Edit()
+        {
+            string sql = $@"
+                            UPDATE csh SET 
+                            [csh_dt] = '{CshData:yyyy-MM-dd}'
+                            ,[stt_id_from] = {SttIdFrom.SttId} 
+                            ,[stt_id_to] = {SttIdTo.SttId}  
+                            ,[csh_sum] = {CshSum}
+                            ,[csh_pln] = {CshPln}
+                            ,[csh_note] = '{CshNote}'
+                            WHERE csh_id = {CshId}";
+            new db3work(sql).RunSql();
+        }
     }
 }

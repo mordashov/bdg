@@ -62,9 +62,6 @@ namespace bdg
             _prj.PrjId = drv.Row[0].ToString();
             _stt = new Stt(_ctg, _prj);
 
-            string toFullname = "";
-            string fromFullName = "";
-
             switch (_stt.NameField)
             {
                 case "stt_id_from":
@@ -119,43 +116,21 @@ namespace bdg
         private void buttonAdd_Click(object sender, RoutedEventArgs e) //Добавление/изменение данных в csh
         {
 
-            //string sttIdFrom;
-            //string sttIdTo;
+            DateTime dt = Convert.ToDateTime(DateCsh.Text);
+            _csh.CshData = dt;
+            _csh.CshNote = TextBoxComment.Text;
+            _csh.CshPln = CheckBoxPln.IsChecked == false ? "0" : "1";
 
-            //DateTime dt;
-            //dt = Convert.ToDateTime(DateCsh.Text);
-            //string plan = CheckBoxPln.IsChecked.ToString() == "0" ? "1" : "0";
-            //string sql;
-
-            //switch (ButtonAdd.Content)
-            //{
-            //    //Добавление новой строки
-            //    case "Добавить":
-            //        sql = $@"
-            //                    INSERT INTO csh
-            //                    (csh_dt, stt_id_from, stt_id_to, csh_sum, csh_pln, csh_note)
-            //                    VALUES('{dt:yyyy-MM-dd}', {SttId[0]}, {SttId[1]}, {TextBoxSum.Text}, {plan}, '{TextBoxComment.Text}');";
-            //        db3.RunSql(sql);
-            //        break;
-            //    //Добавление новой строки
-            //    case "Изменть":
-            //        sql = $@"
-            //                    UPDATE csh SET 
-            //                    [csh_dt] = '{dt:yyyy-MM-dd}'
-            //                    ,[stt_id_from] = {SttId[0]} 
-            //                    ,[stt_id_to] = {SttId[1]}  
-            //                    ,[csh_sum] = {TextBoxSum.Text}
-            //                    ,[csh_pln] = {plan}
-            //                    ,[csh_note] = '{TextBoxComment.Text}'
-            //                    WHERE csh_id = {_sttId}";
-            //        db3.RunSql(sql);
-            //        break;
-            //}
-            ////Обновляем гриды, переменные и текстбоксы
-            //Refresh();
-
-            ////}
-
+            switch (ButtonAdd.Content)
+            {
+                case "Добавить":
+                    _csh.Add();
+                    break;
+                case "Изменть":
+                    _csh.Edit();
+                    break;
+            }
+            Refresh();
         }
 
         //        private string  SttInsert(string crtId, string prjId) //Добавление новой статьи
@@ -227,19 +202,7 @@ namespace bdg
 
         private void textBoxSum_LostFocus(object sender, RoutedEventArgs e)
         {
-            //Для sqlite меняю запятую на точку
-            //TextBoxSum.Text = TextBoxSum.Text.Replace(",", ".");
-            //TextBoxSum.Text = TextBoxSum.Text.Replace(" ", "");
-            //try
-            //{
-            //    Для парсера меняю точку на запятую (в системе разделитель запятая)
-            //    double d = double.Parse(TextBoxSum.Text.Replace(".", ","));
-            //}
-            //catch (Exception)
-            //{
-            //    MessageBox.Show("Неверная сумма!");
-            //}
-
+            _csh.CshSum = TextBoxSum.Text;
         }
         private void TextBoxSum_GotFocus(object sender, RoutedEventArgs e)
         {
@@ -455,5 +418,6 @@ namespace bdg
         {
             //CshSelect();
         }
+
     }
 }
