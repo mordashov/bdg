@@ -43,7 +43,7 @@ namespace bdg
                             FROM prj p
                             JOIN stt s ON s.prj_id = p.prj_id
                             JOIN ctg c ON c.ctg_id = s.ctg_id
-                            JOIN csh h ON h.{stt.NameField} = s.stt_id
+                            JOIN csh h ON h.{stt.SttFromOrTo} = s.stt_id
                             GROUP BY p.prj_id, p.prj_nm
                             ORDER BY {subSql} DESC, prj_nm;
                             ";

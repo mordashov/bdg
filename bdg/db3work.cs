@@ -87,10 +87,10 @@ namespace bdg
             return res;
         }
 
-        public Dictionary<int, string> ValuesRow()
+        public Dictionary<String, string> ValuesRow()
         {
             //TODO: Сделать проверку на кол-во строк, если больше одной, возвращаем ошибку
-            Dictionary<int, string> dic = new Dictionary<int, string>();
+            Dictionary<string, string> dic = new Dictionary<string, string>();
             SQLiteDataReader rd = _comm.ExecuteReader();
 
             if (rd.StepCount != 1)
@@ -98,10 +98,28 @@ namespace bdg
                 string msg = $"Ошибка! Метод вернул {rd.StepCount.ToString()} строк";
                 return null;
             }
-            for (int i = 0; i < rd.FieldCount; i++)
+
+            if (rd.HasRows)
             {
-                dic.Add(int.Parse(rd[i].ToString()), rd.GetName(i));
+                while (rd.Read())
+                {
+                    //Console.WriteLine("{0}\t{1}", rd.GetInt32(0),
+                    //    rd.GetString(1));
+                    for (int i = 0; i < rd.FieldCount; i++)
+                    {
+                        //dic.Add(int.Parse(rd[i].ToString()), rd.GetName(i));
+                        dic.Add(rd.GetName(i), rd.GetValue(i).ToString());
+                    }
+
+                }
             }
+            else
+            {
+                Console.WriteLine("No rows found.");
+            }
+            rd.Close();
+
+
             return dic;
         }
     }

@@ -62,7 +62,7 @@ namespace bdg
             _prj.PrjId = drv.Row[0].ToString();
             _stt = new Stt(_ctg, _prj);
 
-            switch (_stt.NameField)
+            switch (_stt.SttFromOrTo)
             {
                 case "stt_id_from":
                     _csh.SttIdFrom = _stt;
@@ -117,7 +117,7 @@ namespace bdg
         {
 
             DateTime dt = Convert.ToDateTime(DateCsh.Text);
-            _csh.CshData = dt;
+            _csh.CshDate = dt;
             _csh.CshNote = TextBoxComment.Text;
             _csh.CshPln = CheckBoxPln.IsChecked == false ? "0" : "1";
 
@@ -348,24 +348,17 @@ namespace bdg
 
         private void CshEdit_Click(object sender, RoutedEventArgs e)
         {
-            //DataRowView dataRow = (DataRowView)DataGridCsh.SelectedItem;
-            //int cshId = Int32.Parse(dataRow.Row.ItemArray[0].ToString());
-            //string dateCsh = dataRow.Row.ItemArray[1].ToString();
-            //int sttIdFrom = Int32.Parse(dataRow.Row.ItemArray[2].ToString());
-            //string sttFrom = dataRow.Row.ItemArray[3].ToString();
-            //int sttIdTo = Int32.Parse(dataRow.Row.ItemArray[4].ToString());
-            //string sttTo = dataRow.Row.ItemArray[5].ToString();
-            //double cshSum = Double.Parse(dataRow.Row.ItemArray[6].ToString());
-            //string cshComment = dataRow.Row.ItemArray[8].ToString();
+            DataRowView dataRow = (DataRowView)DataGridCsh.SelectedItem;
+            _csh = null;
+            _csh = new Csh();
+            _csh.CshId = dataRow.Row.ItemArray[0].ToString();
+            _csh.GetRowValues();
             ButtonAdd.Content = "Изменить";
-            //db3.CshId = cshId.ToString();
-            //DateCsh.Text = dateCsh;
-            //TextBoxFrom.Text = sttFrom;
-            //db3.SttIdFrom = sttIdFrom.ToString();
-            //TextBoxTo.Text = sttTo;
-            //db3.SttIdTo = sttIdTo.ToString();
-            //TextBoxSum.Text = cshSum.ToString(CultureInfo.InvariantCulture);
-            //TextBoxComment.Text = cshComment;
+            DateCsh.Text = _csh.CshDate.ToShortDateString();
+            TextBoxFrom.Text = _csh.SttIdFrom.SttName;
+            TextBoxTo.Text = _csh.SttIdTo.SttName;
+            TextBoxSum.Text = _csh.CshSum.ToString(CultureInfo.InvariantCulture);
+            TextBoxComment.Text = _csh.CshNote;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)

@@ -34,15 +34,15 @@ namespace bdg
                 _cshSum = value;
             }
         }
-        public DateTime CshData { get; set; }
+        public DateTime CshDate { get; set; }
         public string CshPln { get; set; }
         public string CshNote { get; set; }
 
-        public Dictionary<int, string> GetValues(string csh_id)
+        public Dictionary<string, string> GetValues(string csh_id)
         {
             string sql = $"SELECT csh_id, csh_dt, stt_id_from, stt_id_to, csh_sum, sch_pln, csh_note FROM csh WHERE csh_id = {csh_id}";
-            Dictionary<int, string> db = new db3work(sql).ValuesRow();
-            return db;
+            Dictionary<string, string> dic = new db3work(sql).ValuesRow();
+            return dic;
         }
 
         public string GetTotalSum(Stt stt)
@@ -107,7 +107,7 @@ namespace bdg
                     INSERT INTO csh
                     (csh_dt, stt_id_from, stt_id_to, csh_sum, csh_pln, csh_note)
                     VALUES(
-                        '{CshData:yyyy-MM-dd}'
+                        '{CshDate:yyyy-MM-dd}'
                         ,{SttIdFrom.SttId}
                         ,{SttIdTo.SttId}
                         ,{CshSum}
@@ -121,7 +121,7 @@ namespace bdg
         {
             string sql = $@"
                             UPDATE csh SET 
-                            [csh_dt] = '{CshData:yyyy-MM-dd}'
+                            [csh_dt] = '{CshDate:yyyy-MM-dd}'
                             ,[stt_id_from] = {SttIdFrom.SttId} 
                             ,[stt_id_to] = {SttIdTo.SttId}  
                             ,[csh_sum] = {CshSum}
@@ -129,6 +129,30 @@ namespace bdg
                             ,[csh_note] = '{CshNote}'
                             WHERE csh_id = {CshId}";
             new db3work(sql).RunSql();
+        }
+
+        public void GetRowValues()
+        {
+            string sql = $@"SELECT 
+                                csh_id
+                                ,csh_dt
+                                ,stt_id_from
+                                ,stt_id_to
+                                ,csh_sum
+                                ,csh_pln
+                                ,csh_note 
+                            FROM csh 
+                            WHERE csh_id = {CshId}";
+            Dictionary<string, string> rowValues = new db3work(sql).ValuesRow();
+            CshDate = DateTime.Parse(rowValues["csh_dt"]);
+            Stt stt;
+            stt = new Stt(rowValues["stt_id_from"], "stt_id_from");
+            SttIdFrom = stt;
+            stt = new Stt(rowValues["stt_id_to"], "stt_id_to");
+            SttIdTo = stt;
+            CshSum = rowValues["csh_sum"];
+            CshPln = rowValues["csh_pln"];
+            CshNote = rowValues["csh_note"];
         }
     }
 }
