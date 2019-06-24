@@ -115,18 +115,16 @@ namespace bdg
 
         private void buttonAdd_Click(object sender, RoutedEventArgs e) //Добавление/изменение данных в csh
         {
-
-            DateTime dt = Convert.ToDateTime(DateCsh.Text);
-            _csh.CshDate = dt;
-            _csh.CshNote = TextBoxComment.Text;
-            _csh.CshPln = CheckBoxPln.IsChecked == false ? "0" : "1";
-
             switch (ButtonAdd.Content)
             {
                 case "Добавить":
+                    DateTime dt = Convert.ToDateTime(DateCsh.Text);
+                    _csh.CshDate = dt;
+                    _csh.CshNote = TextBoxComment.Text;
+                    _csh.CshPln = CheckBoxPln.IsChecked == false ? "0" : "1";
                     _csh.Add();
                     break;
-                case "Изменть":
+                case "Изменить":
                     _csh.Edit();
                     break;
             }
@@ -359,6 +357,8 @@ namespace bdg
             TextBoxTo.Text = _csh.SttIdTo.SttName;
             TextBoxSum.Text = _csh.CshSum.ToString(CultureInfo.InvariantCulture);
             TextBoxComment.Text = _csh.CshNote;
+
+            ButtonAdd.IsEnabled = true;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
