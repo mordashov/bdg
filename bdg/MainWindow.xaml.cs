@@ -274,44 +274,42 @@ namespace bdg
             //CrtFill();
         }
 
-        //private void PrjNew_Click(object sender, RoutedEventArgs e)
-        //{
-        //    string sql = "INSERT INTO prj (prj_nm) VALUES ('-= Новая строка =-')";
-        //    db3.RunSql(sql);
-        //    PrjFill();
-        //}
+        private void PrjNew_Click(object sender, RoutedEventArgs e)
+        {
+            new Prj(_ctg).Add();
+        }
 
-        //private void PrjDel_Click(object sender, RoutedEventArgs e)
-        //{
-        //    DataRowView dataRow = (DataRowView)DataGridPrj.SelectedItem;
-        //    string prjId = dataRow.Row.ItemArray[0].ToString();
+        private void PrjDel_Click(object sender, RoutedEventArgs e)
+        {
+            //    DataRowView dataRow = (DataRowView)DataGridPrj.SelectedItem;
+            //    string prjId = dataRow.Row.ItemArray[0].ToString();
 
-        //    //Проверка используется ли категория в основной таблице
-        //    string sql = $@"
-        //    SELECT COUNT(csh_from.stt_id_from)
-        //      FROM [prj]
-        //      INNER JOIN stt ON stt.prj_id = prj.prj_id
-        //      LEFT JOIN csh AS csh_from ON csh_from.stt_id_from = stt.stt_id
-        //      LEFT JOIN csh AS csh_to ON csh_to.stt_id_to = stt.stt_id
-        //      WHERE [prj].[prj_id] = {prjId}
-        //      GROUP BY csh_from.stt_id_from
-        //      ;";
-        //    string rowsCount = db3.ScalarSql(sql);
-        //    if (rowsCount == "0")
-        //    {
-        //        //Удаление связки в stt
-        //        sql = $@"DELETE FROM stt WHERE prj_id = {prjId}";
-        //        db3.RunSql(sql);
+            //    //Проверка используется ли категория в основной таблице
+            //    string sql = $@"
+            //    SELECT COUNT(csh_from.stt_id_from)
+            //      FROM [prj]
+            //      INNER JOIN stt ON stt.prj_id = prj.prj_id
+            //      LEFT JOIN csh AS csh_from ON csh_from.stt_id_from = stt.stt_id
+            //      LEFT JOIN csh AS csh_to ON csh_to.stt_id_to = stt.stt_id
+            //      WHERE [prj].[prj_id] = {prjId}
+            //      GROUP BY csh_from.stt_id_from
+            //      ;";
+            //    string rowsCount = db3.ScalarSql(sql);
+            //    if (rowsCount == "0")
+            //    {
+            //        //Удаление связки в stt
+            //        sql = $@"DELETE FROM stt WHERE prj_id = {prjId}";
+            //        db3.RunSql(sql);
 
-        //        //Удаление категории
-        //        sql = $@"DELETE FROM prj WHERE prj_id = {prjId}";
-        //        db3.RunSql(sql);
-        //        //Заполнение DataGrid
-        //        PrjFill();
-        //    }
-        //    else
-        //        MessageBox.Show("Внимание, проект используется в основной таблие!\nЕго удалить нельзя!");
-        //}
+            //        //Удаление категории
+            //        sql = $@"DELETE FROM prj WHERE prj_id = {prjId}";
+            //        db3.RunSql(sql);
+            //        //Заполнение DataGrid
+            //        PrjFill();
+            //    }
+            //    else
+            //        MessageBox.Show("Внимание, проект используется в основной таблие!\nЕго удалить нельзя!");
+        }
 
         private void CshDel_Click(object sender, RoutedEventArgs e)
         {

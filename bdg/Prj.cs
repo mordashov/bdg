@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace bdg
@@ -11,7 +12,6 @@ namespace bdg
     class Prj
     {
         private string _prjId;
-
         public string PrjId
         {
             get => _prjId; set
@@ -23,14 +23,13 @@ namespace bdg
         }
         public string PrjName { get; set; }
         public string PrjField { get; set; }
+        private Ctg _ctg { get; set; }
 
         public Prj(Ctg ctg)
         {
-            //_ctg = ctg;
-            //Fill();
             PrjField = "prj_id_from";
             if (ctg.CtgField == "ctg_id_to") PrjField = "prj_id_to";
-
+            _ctg = ctg;
         }
 
         public void Fill(Stt stt, DataGrid dataGrid)
@@ -49,7 +48,34 @@ namespace bdg
                             ";
             DataTable dt = new db3work(sql).SelectSql();
             dataGrid.DataContext = dt;
+        }
 
+        public void Add()
+        {
+            InputWindow inputWindow = new InputWindow();
+            inputWindow.Left = Application.Current.MainWindow.Left;
+            inputWindow.TextBoxInput.Text = "";
+            inputWindow.Title = "Ввод имени нового проекта";
+            inputWindow.ShowDialog();
+            string tbValue = inputWindow.TextBoxInput.Text;
+            if (inputWindow.IsОК == false) return;
+
+            MessageBoxResult msg;
+            msg = MessageBox.Show(
+                $"Введенный проект будет связан с категорией {_ctg.CtgName}\nПродолжить?"
+                , "Внимание"
+                , MessageBoxButton.YesNo);
+            if (msg != MessageBoxResult.Yes) return;
+            if (tbValue == "") return;
+
+            string sql = $"INSERT INTO prj (prj_nm) VALUES ('{tbValue}')";
+            new db3work(sql).RunSql();
+            PrjName = tbValue;
+            sql = $"SELECT prj_id FROM prj WHERE prj_nm = '{PrjName}'";
+            PrjId = new db3work(sql).ScalarSql();
+            sql = $"INSERT INTO stt (ctg_id, prj_id) VALUES ({_ctg.CtgId}, {PrjId})";
+            new db3work(sql).RunSql();
+            inputWindow.Close();
         }
     }
 }

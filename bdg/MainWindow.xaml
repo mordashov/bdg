@@ -89,8 +89,8 @@
             </DataGrid.RowStyle>
             <DataGrid.ContextMenu>
                 <ContextMenu Name="PrjMenu">
-                    <!--<MenuItem Name="PrjNew" Header="Добавить" Click="PrjNew_Click" />
-                    <MenuItem Name="PrjDel" Header="Удалить" Click="PrjDel_Click" />-->
+                    <MenuItem Name="PrjNew" Header="Добавить" Click="PrjNew_Click" />
+                    <MenuItem Name="PrjDel" Header="Удалить" Click="PrjDel_Click" />
                 </ContextMenu>
             </DataGrid.ContextMenu>
         </DataGrid>

@@ -151,12 +151,19 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Ctg.cs" />
+    <Compile Include="InputWindow.xaml.cs">
+      <DependentUpon>InputWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Prj.cs" />
     <Compile Include="Stt.cs" />
     <Compile Include="db3work.cs" />
     <Compile Include="SQLite.cs" />
     <Compile Include="SQLiteAsync.cs" />
     <Compile Include="Csh.cs" />
+    <Page Include="InputWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
