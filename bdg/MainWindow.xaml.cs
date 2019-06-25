@@ -346,19 +346,24 @@ namespace bdg
 
         private void CshEdit_Click(object sender, RoutedEventArgs e)
         {
+            GetCshRowValues();
+            ButtonAdd.Content = "Изменить";
+            ButtonAdd.IsEnabled = true;
+        }
+
+        private void GetCshRowValues()
+        {
             DataRowView dataRow = (DataRowView)DataGridCsh.SelectedItem;
             _csh = null;
             _csh = new Csh();
             _csh.CshId = dataRow.Row.ItemArray[0].ToString();
             _csh.GetRowValues();
-            ButtonAdd.Content = "Изменить";
             DateCsh.Text = _csh.CshDate.ToShortDateString();
             TextBoxFrom.Text = _csh.SttIdFrom.SttName;
             TextBoxTo.Text = _csh.SttIdTo.SttName;
             TextBoxSum.Text = _csh.CshSum.ToString(CultureInfo.InvariantCulture);
             TextBoxComment.Text = _csh.CshNote;
 
-            ButtonAdd.IsEnabled = true;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -409,7 +414,9 @@ namespace bdg
 
         private void DataGridCsh_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            //CshSelect();
+            GetCshRowValues();
+            ButtonAdd.Content = "Добавить";
+            ButtonAdd.IsEnabled = true;
         }
 
     }
