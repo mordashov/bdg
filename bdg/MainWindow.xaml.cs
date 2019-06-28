@@ -159,6 +159,14 @@ namespace bdg
             //}
         }
 
+        private void CtgNew_Click(object sender, RoutedEventArgs e)
+        {
+            //string sql = "INSERT INTO ctg (ctg_nm) VALUES ('-= Новая строка =-')";
+            //db3.RunSql(sql);
+            //CrtFill();
+            new Ctg().Add(DataGridCtg);
+        }
+
         private void CtgDel_Click(object sender, RoutedEventArgs e)
         {
             //            DataRowView drv = (DataRowView)DataGridCtg.SelectedCells[0].Item;
@@ -199,13 +207,6 @@ namespace bdg
             //                CrtFill();
             //            }
             //            db3.RunSql(sql);
-        }
-
-        private void CtgNew_Click(object sender, RoutedEventArgs e)
-        {
-            //string sql = "INSERT INTO ctg (ctg_nm) VALUES ('-= Новая строка =-')";
-            //db3.RunSql(sql);
-            //CrtFill();
         }
 
         private void PrjNew_Click(object sender, RoutedEventArgs e)
