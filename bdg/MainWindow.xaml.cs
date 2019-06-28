@@ -47,18 +47,19 @@ namespace bdg
         private void DataGridCtg_MouseUp(object sender, MouseButtonEventArgs e)
         {
             CtgSelect((DataGrid)sender);
-            _prj.Fill(_stt, DataGridPrj);
+            new Prj(_stt).Fill(DataGridPrj);
         }
 
         private void DataGridCtg_KeyUp(object sender, KeyEventArgs e)
         {
             CtgSelect((DataGrid)sender);
-            _prj.Fill(_stt, DataGridPrj);
+            new Prj(_stt).Fill(DataGridPrj);
         }
 
         private void PrjSelect() //Изменение выбора в проектах
         {
             DataRowView drv = (DataRowView)DataGridPrj.SelectedItem;
+            if (drv == null) return;
             _prj.PrjId = drv.Row[0].ToString();
             _stt = new Stt(_ctg, _prj);
 
@@ -276,7 +277,7 @@ namespace bdg
 
         private void PrjNew_Click(object sender, RoutedEventArgs e)
         {
-            new Prj(_ctg).Add();
+            new Prj(_stt).Add(DataGridPrj);
         }
 
         private void PrjDel_Click(object sender, RoutedEventArgs e)

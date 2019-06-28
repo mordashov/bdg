@@ -24,6 +24,7 @@ namespace bdg
         public string PrjName { get; set; }
         public string PrjField { get; set; }
         private Ctg _ctg { get; set; }
+        private Stt _stt { get; set; }
 
         public Prj(Ctg ctg)
         {
@@ -32,17 +33,22 @@ namespace bdg
             _ctg = ctg;
         }
 
-        public void Fill(Stt stt, DataGrid dataGrid)
+        public Prj(Stt stt)
         {
-            string subSql = $"SUM(CASE c.ctg_id WHEN {stt.CtgId} THEN 1 ELSE 0 END)";
+            _stt = stt;
+        }
+
+        public void Fill(DataGrid dataGrid)
+        {
+            string subSql = $"SUM(CASE c.ctg_id WHEN {_stt.CtgId} THEN 1 ELSE 0 END)";
             string sql = $@"
                             SELECT p.prj_id, prj_nm, 
                                 {subSql} AS ctg_id,
                                 CASE {subSql} WHEN 0 THEN 0 ELSE 1 END AS color 
                             FROM prj p
-                            JOIN stt s ON s.prj_id = p.prj_id
-                            JOIN ctg c ON c.ctg_id = s.ctg_id
-                            JOIN csh h ON h.{stt.SttFromOrTo} = s.stt_id
+                            LEFT JOIN stt s ON s.prj_id = p.prj_id
+                            LEFT JOIN ctg c ON c.ctg_id = s.ctg_id
+                            LEFT JOIN csh h ON h.{_stt.SttFromOrTo} = s.stt_id
                             GROUP BY p.prj_id, p.prj_nm
                             ORDER BY {subSql} DESC, prj_nm;
                             ";
@@ -50,7 +56,7 @@ namespace bdg
             dataGrid.DataContext = dt;
         }
 
-        public void Add()
+        public void Add(DataGrid dataGrid)
         {
             InputWindow inputWindow = new InputWindow();
             inputWindow.Left = Application.Current.MainWindow.Left;
@@ -62,20 +68,20 @@ namespace bdg
 
             MessageBoxResult msg;
             msg = MessageBox.Show(
-                $"Введенный проект будет связан с категорией {_ctg.CtgName}\nПродолжить?"
+                $"Введенный проект будет связан с категорией {_stt.CtgName}\nПродолжить?"
                 , "Внимание"
                 , MessageBoxButton.YesNo);
             if (msg != MessageBoxResult.Yes) return;
-            if (tbValue == "") return;
 
             string sql = $"INSERT INTO prj (prj_nm) VALUES ('{tbValue}')";
             new db3work(sql).RunSql();
             PrjName = tbValue;
             sql = $"SELECT prj_id FROM prj WHERE prj_nm = '{PrjName}'";
             PrjId = new db3work(sql).ScalarSql();
-            sql = $"INSERT INTO stt (ctg_id, prj_id) VALUES ({_ctg.CtgId}, {PrjId})";
+            sql = $"INSERT INTO stt (ctg_id, prj_id) VALUES ({_stt.CtgId}, {PrjId})";
             new db3work(sql).RunSql();
             inputWindow.Close();
+            Fill(dataGrid);
         }
     }
 }
