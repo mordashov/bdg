@@ -132,73 +132,6 @@ namespace bdg
             Refresh();
         }
 
-        //        private string  SttInsert(string crtId, string prjId) //Добавление новой статьи
-        //        {
-        //            // Проверка наличия связки категори и проекта в stt
-        //            string sqlSttId = $@"
-        //                SELECT stt_id
-        //                FROM stt
-        //                WHERE ctg_id = {crtId} AND prj_id = {prjId};
-        //            ";
-        //            string sttId = db3.ScalarSql(sqlSttId);
-        //            MessageBoxResult msg = MessageBoxResult.No;
-        //            if (sttId == "0")
-        //                msg = MessageBox.Show("Добавить новую связку Категрия-проект?", "", MessageBoxButton.YesNo);
-
-        //            if (msg == MessageBoxResult.Yes)
-        //            {
-        //                //Если связки нет - добавляем
-        //                if (sttId == "0")
-        //                {
-        //                    string sql = $@"
-        //                INSERT INTO stt
-        //                (ctg_id, prj_id)
-        //                VALUES({crtId}, {prjId});
-        //                ";
-        //                    db3.RunSql(sql);
-        //                }
-        //            }
-
-        //            return db3.ScalarSql(sqlSttId);
-
-        //        }
-
-        //        private void CshSelect()
-        //        {
-        //            DataRowView dataRow = (DataRowView)DataGridCsh.SelectedItem ?? (DataRowView)DataGridCsh.Items[0];
-        //            int countColumn = dataRow.Row.ItemArray.Length; 
-        //            for (int i = 0; i < countColumn; i++)
-        //            {
-        //                string columnName = DataGridCsh.Columns[i].Header.ToString();
-        //                string cellValue = dataRow.Row.ItemArray[i].ToString();
-
-        //                switch (columnName)
-        //                {
-        //                    case "stt_id_from":
-        //                        SttId[0] = cellValue;
-        //                        break;
-        //                    case "stt_id_to":
-        //                        SttId[1] = cellValue;
-        //                        break;
-        //                    case "От куда":
-        //                        TextBoxFrom.Text = cellValue;
-        //                        break;
-        //                    case "Куда":
-        //                        TextBoxTo.Text = cellValue;
-        //                        break;
-        //                    case "Сумма":
-        //                        TextBoxSum.Text = cellValue;
-        //                        break;
-        //                    case "Примечение":
-        //                        TextBoxComment.Text = cellValue;
-        //                        break;
-        //                    case "ID":
-        //                        _cshId = cellValue;
-        //                        break;
-        //                }
-        //            }
-        //        }
-
         private void textBoxSum_LostFocus(object sender, RoutedEventArgs e)
         {
             _csh.CshSum = TextBoxSum.Text;
@@ -282,34 +215,7 @@ namespace bdg
 
         private void PrjDel_Click(object sender, RoutedEventArgs e)
         {
-            //    DataRowView dataRow = (DataRowView)DataGridPrj.SelectedItem;
-            //    string prjId = dataRow.Row.ItemArray[0].ToString();
-
-            //    //Проверка используется ли категория в основной таблице
-            //    string sql = $@"
-            //    SELECT COUNT(csh_from.stt_id_from)
-            //      FROM [prj]
-            //      INNER JOIN stt ON stt.prj_id = prj.prj_id
-            //      LEFT JOIN csh AS csh_from ON csh_from.stt_id_from = stt.stt_id
-            //      LEFT JOIN csh AS csh_to ON csh_to.stt_id_to = stt.stt_id
-            //      WHERE [prj].[prj_id] = {prjId}
-            //      GROUP BY csh_from.stt_id_from
-            //      ;";
-            //    string rowsCount = db3.ScalarSql(sql);
-            //    if (rowsCount == "0")
-            //    {
-            //        //Удаление связки в stt
-            //        sql = $@"DELETE FROM stt WHERE prj_id = {prjId}";
-            //        db3.RunSql(sql);
-
-            //        //Удаление категории
-            //        sql = $@"DELETE FROM prj WHERE prj_id = {prjId}";
-            //        db3.RunSql(sql);
-            //        //Заполнение DataGrid
-            //        PrjFill();
-            //    }
-            //    else
-            //        MessageBox.Show("Внимание, проект используется в основной таблие!\nЕго удалить нельзя!");
+            new Prj(_stt).Del(DataGridPrj);
         }
 
         private void CshDel_Click(object sender, RoutedEventArgs e)
