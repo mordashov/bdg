@@ -36,5 +36,12 @@ namespace bdg
             this.Close();
         }
 
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            Application curApp = Application.Current;
+            Window mainWindow = curApp.MainWindow;
+            this.Left = mainWindow.Left + (mainWindow.Width - this.ActualWidth) / 2;
+            this.Top = mainWindow.Top + (mainWindow.Height - this.ActualHeight) / 2;
+        }
     }
 }

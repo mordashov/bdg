@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:bdg"
         mc:Ignorable="d"
-        Title="InputWindow" Height="140" Width="300">
+        Title="InputWindow" Height="140" Width="300" Loaded="Window_Loaded">
     <Grid>
         <StackPanel Orientation="Vertical">
             <Label Name="labelInput" Margin="10 10 10 5" FontWeight="Bold">Введите имя:</Label>
