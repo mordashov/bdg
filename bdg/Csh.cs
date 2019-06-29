@@ -25,10 +25,12 @@ namespace bdg
                 {
                     //Для парсера меняю точку на запятую(в системе разделитель запятая)
                     double d = double.Parse(value.Replace(".", ","));
+                    value = d.ToString();
                 }
                 catch (Exception)
                 {
-                    MessageBox.Show("Неверная сумма!");
+                    value = null;
+                    //MessageBox.Show("Неверная сумма!");
                 }
 
                 _cshSum = value;

@@ -54,7 +54,6 @@ namespace bdg
             }
         }
 
-
         public void Add(DataGrid dataGrid)
         {
             InputWindow inputWindow = new InputWindow();
@@ -74,6 +73,41 @@ namespace bdg
             Fill(dataGrid);
         }
 
+        public void Del(DataGrid dataGrid)
+        {
+            DataRowView drv = (DataRowView)dataGrid.SelectedItem;
+            if (drv == null) return;
+            string ctgId = drv.Row.ItemArray[0].ToString();
+
+            //Проверка используется ли проект в основной таблице
+            string sql = $@"
+                SELECT COUNT(stt.stt_id)
+                  FROM [ctg]
+                  LEFT JOIN stt ON stt.ctg_id = ctg.ctg_id
+                  LEFT JOIN csh AS csh_from ON csh_from.stt_id_from = stt.stt_id
+                  LEFT JOIN csh AS csh_to ON csh_to.stt_id_to = stt.stt_id
+                  WHERE [ctg].[ctg_id] = {ctgId}
+                  GROUP BY csh_from.stt_id_from
+                  ;";
+            string rowsCount = new db3work(sql).ScalarSql();
+            if (rowsCount == "0")
+            {
+                //Удаление связки в stt
+                sql = $@"DELETE FROM stt WHERE ctg_id = {ctgId}";
+                new db3work(sql).RunSql();
+
+                //Удаление категории
+                sql = $@"DELETE FROM ctg WHERE ctg_id = {ctgId}";
+                new db3work(sql).RunSql();
+
+                //Заполнение DataGrid
+                Fill(dataGrid);
+            }
+            else
+            {
+                MessageBox.Show("Внимание, категория используется в основной таблие!\nЕё удалить нельзя!");
+            }
+        }
 
     }
 

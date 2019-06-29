@@ -56,7 +56,7 @@
             FontSize="16" 
             CanUserAddRows="False" 
             MouseUp="DataGridCtg_MouseUp" 
-            KeyUp="DataGridCtg_KeyUp" SelectionMode="Single">
+            KeyUp="DataGridCtg_KeyUp" SelectionMode="Single" MouseLeftButtonUp="DataGridCtg_MouseLeftButtonUp" MouseRightButtonUp="DataGridCtg_MouseRightButtonUp">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID" Binding="{Binding ctg_id}" Visibility="Collapsed" />
                 <DataGridTextColumn Header="Категория" Binding="{Binding ctg_nm}" Width="180"/>
