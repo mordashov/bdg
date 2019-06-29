@@ -104,6 +104,9 @@ namespace bdg
 
         public void Add()
         {
+            if (SttIdFrom.SttId == null) GetStt(SttIdFrom);
+            if (SttIdTo.SttId == null) GetStt(SttIdTo);
+
             string sql;
             sql = $@"
                     INSERT INTO csh
@@ -155,6 +158,15 @@ namespace bdg
             CshSum = rowValues["csh_sum"];
             CshPln = rowValues["csh_pln"];
             CshNote = rowValues["csh_note"];
+        }
+
+        private Stt GetStt(Stt stt)
+        {
+            string sql = $"INSERT INTO stt (ctg_id, prj_id) VALUES ({stt.CtgId},{stt.PrjId})";
+            new db3work(sql).RunSql();
+            sql = $"SELECT stt_id FROM stt WHERE ctg_id = {stt.CtgId} AND prj_id = {stt.PrjId}";
+            stt.SttId = new db3work(sql).ScalarSql();
+            return stt;
         }
     }
 }
