@@ -296,7 +296,10 @@ namespace bdg
 
         private void DataGridCtg_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
         {
-
+            DataGrid dataGrid = (DataGrid)sender;
+            DataGridRow dataRow = SelectionOnRightClick(e);
+            if (dataRow == null) return;
+            dataGrid.SelectedItem = dataRow.DataContext;
         }
 
         private void SttDel_Click(object sender, RoutedEventArgs e)
@@ -306,14 +309,20 @@ namespace bdg
 
         private void DataGridPrj_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
         {
+            DataGrid dataGrid = (DataGrid)sender;
+            DataGridRow dataRow = SelectionOnRightClick(e);
+            if (dataRow == null) return;
+            dataGrid.SelectedItem = dataRow.DataContext;
+        }
 
-            DataGrid dg = (DataGrid)sender;
+        private DataGridRow SelectionOnRightClick(MouseButtonEventArgs e)
+        {
             DependencyObject dep = (DependencyObject)e.OriginalSource;
             while ((dep != null) && !(dep is DataGridCell))
             {
                 dep = VisualTreeHelper.GetParent(dep);
             }
-            if (dep == null) return;
+            if (dep == null) return null;
 
             if (dep is DataGridCell)
             {
@@ -324,9 +333,25 @@ namespace bdg
                 {
                     dep = VisualTreeHelper.GetParent(dep);
                 }
-                DataGridRow row = dep as DataGridRow;
-                dg.SelectedItem = row.DataContext;
+
+                DataGridRow dataRow = dep as DataGridRow;
+                return dataRow;
             }
+
+            return null;
+        }
+
+        private void DataGridCtg_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+
+        private void DataGridCsh_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            DataGrid dataGrid = (DataGrid)sender;
+            DataGridRow dataRow = SelectionOnRightClick(e);
+            if (dataRow == null) return;
+            dataGrid.SelectedItem = dataRow.DataContext;
         }
     }
 }

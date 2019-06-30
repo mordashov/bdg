@@ -56,7 +56,7 @@
             FontSize="16" 
             CanUserAddRows="False" 
             MouseUp="DataGridCtg_MouseUp" 
-            KeyUp="DataGridCtg_KeyUp" SelectionMode="Single" MouseLeftButtonUp="DataGridCtg_MouseLeftButtonUp" MouseRightButtonUp="DataGridCtg_MouseRightButtonUp">
+            KeyUp="DataGridCtg_KeyUp" SelectionMode="Single" MouseLeftButtonUp="DataGridCtg_MouseLeftButtonUp" MouseRightButtonUp="DataGridCtg_MouseRightButtonUp" SelectionChanged="DataGridCtg_SelectionChanged">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID" Binding="{Binding ctg_id}" Visibility="Collapsed" />
                 <DataGridTextColumn Header="Категория" Binding="{Binding ctg_nm}" Width="180"/>
@@ -112,7 +112,7 @@
             AutoGenerateColumns="False"
             HorizontalGridLinesBrush="Gray" 
             VerticalGridLinesBrush="Gray" 
-            MinHeight="260" FontSize="16" SelectionMode="Single" MouseUp="DataGridCsh_MouseUp">
+            MinHeight="260" FontSize="16" SelectionMode="Single" MouseUp="DataGridCsh_MouseUp" MouseLeftButtonUp="DataGridCsh_MouseLeftButtonUp">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID" Binding="{Binding csh_id}" Visibility="Collapsed" />
                 <DataGridTextColumn Header="Дата" Binding="{Binding date}" Width="85"/>
