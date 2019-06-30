@@ -73,6 +73,31 @@ namespace bdg
             Fill(dataGrid);
         }
 
+        public void Edit(DataGrid dataGrid)
+        {
+            DataRowView drv = (DataRowView)dataGrid.SelectedItem;
+            if (drv == null) return;
+            CtgId = drv.Row.ItemArray[0].ToString();
+
+            InputWindow inputWindow = new InputWindow();
+            inputWindow.Left = Application.Current.MainWindow.Left;
+            inputWindow.Title = "Изменение имени категории";
+
+            string sql = $"SELECT ctg_nm FROM ctg WHERE ctg_id  = '{CtgId}'";
+            CtgName = new db3work(sql).ScalarSql();
+            inputWindow.TextBoxInput.Text = CtgName;
+
+            inputWindow.ShowDialog();
+            string tbValue = inputWindow.TextBoxInput.Text;
+            if (inputWindow.IsОК == false) return;
+
+            CtgName = tbValue;
+            sql = $"UPDATE ctg SET ctg_nm = '{CtgName}' WHERE ctg_id={CtgId}";
+            new db3work(sql).RunSql();
+            inputWindow.Close();
+            Fill(dataGrid);
+        }
+
         public void Del(DataGrid dataGrid)
         {
             DataRowView drv = (DataRowView)dataGrid.SelectedItem;

@@ -84,6 +84,31 @@ namespace bdg
             Fill(dataGrid);
         }
 
+        public void Edit(DataGrid dataGrid)
+        {
+            DataRowView drv = (DataRowView)dataGrid.SelectedItem;
+            if (drv == null) return;
+            PrjId = drv.Row.ItemArray[0].ToString();
+
+            InputWindow inputWindow = new InputWindow();
+            inputWindow.Left = Application.Current.MainWindow.Left;
+            inputWindow.Title = "Изменение имени проекта";
+
+            string sql = $"SELECT prj_nm FROM prj WHERE prj_id  = '{PrjId}'";
+            PrjName = new db3work(sql).ScalarSql();
+            inputWindow.TextBoxInput.Text = PrjName;
+
+            inputWindow.ShowDialog();
+            string tbValue = inputWindow.TextBoxInput.Text;
+            if (inputWindow.IsОК == false) return;
+
+            PrjName = tbValue;
+            sql = $"UPDATE prj SET prj_nm = '{PrjName}' WHERE prj_id={PrjId}";
+            new db3work(sql).RunSql();
+            inputWindow.Close();
+            Fill(dataGrid);
+        }
+
         public void Del(DataGrid dataGrid)
         {
             DataRowView drv = (DataRowView)dataGrid.SelectedItem;
@@ -92,7 +117,7 @@ namespace bdg
 
             //Проверка используется ли проект в основной таблице
             string sql = $@"
-                SELECT COUNT(csh_from.stt_id_from)
+                SELECT COUNT(stt.stt_id)
                   FROM [prj]
                   INNER JOIN stt ON stt.prj_id = prj.prj_id
                   LEFT JOIN csh AS csh_from ON csh_from.stt_id_from = stt.stt_id

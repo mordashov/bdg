@@ -56,7 +56,7 @@
             FontSize="16" 
             CanUserAddRows="False" 
             MouseUp="DataGridCtg_MouseUp" 
-            KeyUp="DataGridCtg_KeyUp" SelectionMode="Single" MouseLeftButtonUp="DataGridCtg_MouseLeftButtonUp" MouseRightButtonUp="DataGridCtg_MouseRightButtonUp" SelectionChanged="DataGridCtg_SelectionChanged">
+            KeyUp="DataGridCtg_KeyUp" SelectionMode="Single" MouseLeftButtonUp="DataGridCtg_MouseLeftButtonUp" MouseRightButtonUp="DataGridCtg_MouseRightButtonUp" SelectionChanged="DataGridCtg_SelectionChanged" IsReadOnly="True">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID" Binding="{Binding ctg_id}" Visibility="Collapsed" />
                 <DataGridTextColumn Header="Категория" Binding="{Binding ctg_nm}" Width="180"/>
@@ -64,12 +64,13 @@
             <DataGrid.ContextMenu>
                 <ContextMenu Name="CtgMenu">
                     <MenuItem Name="CtgNew" Header="Добавить" Click="CtgNew_Click"/>
+                    <MenuItem Name="CtgEdit" Header="Изменить" Click="CtgEdit_Click"/>
                     <MenuItem Name="CtgDel" Header="Удалить" Click="CtgDel_Click">
                     </MenuItem>
                 </ContextMenu>
             </DataGrid.ContextMenu>
         </DataGrid>
-        <DataGrid x:Name="DataGridPrj" HorizontalAlignment="Left" Margin="20,0,0,0" Grid.Row="3" Grid.Column="1" VerticalAlignment="Top" ItemsSource="{Binding}" AutoGenerateColumns="False" Width="215" GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="Gray" CellEditEnding="DataGridPrj_CellEditEnding" FontSize="16" MouseUp="DataGridPrj_MouseUp" KeyUp="DataGridPrj_KeyUp" SelectionMode="Single" MouseRightButtonUp="DataGridPrj_MouseRightButtonUp">
+        <DataGrid x:Name="DataGridPrj" HorizontalAlignment="Left" Margin="20,0,0,0" Grid.Row="3" Grid.Column="1" VerticalAlignment="Top" ItemsSource="{Binding}" AutoGenerateColumns="False" Width="215" GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="Gray" CellEditEnding="DataGridPrj_CellEditEnding" FontSize="16" MouseUp="DataGridPrj_MouseUp" KeyUp="DataGridPrj_KeyUp" SelectionMode="Single" MouseRightButtonUp="DataGridPrj_MouseRightButtonUp" IsReadOnly="True">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID" Binding="{Binding prj_id}" Visibility="Collapsed" />
                 <DataGridTextColumn Header="Проект" Binding="{Binding prj_nm}"  Width="180" />
@@ -95,8 +96,9 @@
             <DataGrid.ContextMenu>
                 <ContextMenu Name="PrjMenu">
                     <MenuItem Name="PrjNew" Header="Добавить" Click="PrjNew_Click" />
-                    <MenuItem Name="PrjDel" Header="Удалить" Click="PrjDel_Click" />
+                    <MenuItem Name="PrjEdit" Header="Изменить" Click="PrjEdit_Click" />
                     <MenuItem Name="SttDel" Header="Удалить сопоставление" Click="SttDel_Click"/>
+                    <MenuItem Name="PrjDel" Header="Удалить" Click="PrjDel_Click" />
                 </ContextMenu>
             </DataGrid.ContextMenu>
         </DataGrid>

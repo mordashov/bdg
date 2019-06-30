@@ -345,5 +345,15 @@ namespace bdg
             if (dataRow == null) return;
             dataGrid.SelectedItem = dataRow.DataContext;
         }
+
+        private void CtgEdit_Click(object sender, RoutedEventArgs e)
+        {
+            new Ctg().Edit(DataGridCtg);
+        }
+
+        private void PrjEdit_Click(object sender, RoutedEventArgs e)
+        {
+            new Prj(_stt).Edit(DataGridPrj);
+        }
     }
 }
