@@ -186,15 +186,7 @@ namespace bdg
 
         private void CshDel_Click(object sender, RoutedEventArgs e)
         {
-            //MessageBoxResult msg = MessageBox.Show("Будет удалена выбранная строка!\nПродолжить?", "", MessageBoxButton.YesNo);
-            //if (msg == MessageBoxResult.Yes)
-            //{
-            //    DataRowView dataRow = (DataRowView)DataGridCsh.SelectedItem;
-            //    string cshId = dataRow.Row.ItemArray[0].ToString();
-            //    string sql = $@"DELETE FROM csh WHERE csh_id = {cshId}";
-            //    db3.RunSql(sql);
-            //    CshFill();
-            //}
+            new Csh().Del(DataGridCsh);
         }
 
         private void DataGridPrj_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)

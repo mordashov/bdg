@@ -123,6 +123,26 @@ namespace bdg
             new db3work(sql).RunSql();
         }
 
+        public void Del(DataGrid dataGrid)
+        {
+            DataRowView drv = (DataRowView)dataGrid.SelectedItem;
+            if (drv == null) return;
+            string cshId = drv.Row.ItemArray[0].ToString();
+
+            MessageBoxResult msg;
+            msg = MessageBox.Show(
+                $"Выбранная строка будет удалена\nПродолжить?"
+                , "Внимание"
+                , MessageBoxButton.YesNo);
+            if (msg != MessageBoxResult.Yes) return;
+
+            string sql = $@"DELETE FROM csh WHERE csh_id = {cshId}";
+            new db3work(sql).RunSql();
+
+            Fill(dataGrid);
+
+        }
+
         public void Edit()
         {
             string sql = $@"
