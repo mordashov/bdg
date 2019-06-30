@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -167,6 +168,28 @@ namespace bdg
             sql = $"SELECT stt_id FROM stt WHERE ctg_id = {stt.CtgId} AND prj_id = {stt.PrjId}";
             stt.SttId = new db3work(sql).ScalarSql();
             return stt;
+        }
+
+        public void DelStt(Stt stt)
+        {
+            string sql = $@"
+                SELECT COUNT(csh_id)
+                  FROM [csh]
+                  LEFT JOIN stt AS stt_from ON stt_id_from = stt_from.stt_id
+                  LEFT JOIN stt AS stt_to ON stt_id_to = stt_to.stt_id
+                  WHERE stt_from.stt_id = {stt.SttId} OR stt_to.stt_id = {stt.SttId}";
+
+            string rowsCount = new db3work(sql).ScalarSql();
+            if (rowsCount == "0")
+            {
+                //Удаление связки в stt
+                sql = $"DELETE FROM stt WHERE stt_id = {stt.SttId}";
+                new db3work(sql).RunSql();
+            }
+            else
+            {
+                MessageBox.Show("Внимание, связка используется в основной таблице\nЕё удалить нельзя!");
+            }
         }
     }
 }

@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Markup;
+using System.Windows.Media;
 using Remotion.Linq.Clauses;
 
 namespace bdg
@@ -224,6 +225,7 @@ namespace bdg
         private void GetCshRowValues()
         {
             DataRowView dataRow = (DataRowView)DataGridCsh.SelectedItem;
+            if (dataRow == null) return;
             _csh = null;
             _csh = new Csh();
             _csh.CshId = dataRow.Row.ItemArray[0].ToString();
@@ -233,7 +235,6 @@ namespace bdg
             TextBoxTo.Text = _csh.SttIdTo.SttName;
             TextBoxSum.Text = _csh.CshSum.ToString(CultureInfo.InvariantCulture);
             TextBoxComment.Text = _csh.CshNote;
-
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -296,6 +297,36 @@ namespace bdg
         private void DataGridCtg_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
         {
 
+        }
+
+        private void SttDel_Click(object sender, RoutedEventArgs e)
+        {
+            new Csh().DelStt(_stt);
+        }
+
+        private void DataGridPrj_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
+        {
+
+            DataGrid dg = (DataGrid)sender;
+            DependencyObject dep = (DependencyObject)e.OriginalSource;
+            while ((dep != null) && !(dep is DataGridCell))
+            {
+                dep = VisualTreeHelper.GetParent(dep);
+            }
+            if (dep == null) return;
+
+            if (dep is DataGridCell)
+            {
+                DataGridCell cell = dep as DataGridCell;
+                cell.Focus();
+
+                while ((dep != null) && !(dep is DataGridRow))
+                {
+                    dep = VisualTreeHelper.GetParent(dep);
+                }
+                DataGridRow row = dep as DataGridRow;
+                dg.SelectedItem = row.DataContext;
+            }
         }
     }
 }

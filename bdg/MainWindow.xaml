@@ -64,11 +64,12 @@
             <DataGrid.ContextMenu>
                 <ContextMenu Name="CtgMenu">
                     <MenuItem Name="CtgNew" Header="Добавить" Click="CtgNew_Click"/>
-                    <MenuItem Name="CtgDel" Header="Удалить" Click="CtgDel_Click"></MenuItem>
+                    <MenuItem Name="CtgDel" Header="Удалить" Click="CtgDel_Click">
+                    </MenuItem>
                 </ContextMenu>
             </DataGrid.ContextMenu>
         </DataGrid>
-        <DataGrid x:Name="DataGridPrj" HorizontalAlignment="Left" Margin="20,0,0,0" Grid.Row="3" Grid.Column="1" VerticalAlignment="Top" ItemsSource="{Binding}" AutoGenerateColumns="False" Width="215" GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="Gray" CellEditEnding="DataGridPrj_CellEditEnding" FontSize="16" MouseUp="DataGridPrj_MouseUp" KeyUp="DataGridPrj_KeyUp" SelectionMode="Single">
+        <DataGrid x:Name="DataGridPrj" HorizontalAlignment="Left" Margin="20,0,0,0" Grid.Row="3" Grid.Column="1" VerticalAlignment="Top" ItemsSource="{Binding}" AutoGenerateColumns="False" Width="215" GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="Gray" CellEditEnding="DataGridPrj_CellEditEnding" FontSize="16" MouseUp="DataGridPrj_MouseUp" KeyUp="DataGridPrj_KeyUp" SelectionMode="Single" MouseRightButtonUp="DataGridPrj_MouseRightButtonUp">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID" Binding="{Binding prj_id}" Visibility="Collapsed" />
                 <DataGridTextColumn Header="Проект" Binding="{Binding prj_nm}"  Width="180" />
@@ -84,6 +85,10 @@
                         <DataTrigger Binding="{Binding color}" Value="1">
                             <Setter Property="Background" Value="Orange"></Setter>
                         </DataTrigger>
+                        <!--<DataTrigger Binding="{Binding Path=SelectedItems.Count, RelativeSource={RelativeSource AncestorType=DataGrid}}" Value="0">
+                            <Setter Property="ContextMenu" Value="{x:Null}"/>
+                            <Setter Property="Background" Value="Red"/>
+                        </DataTrigger>-->
                     </Style.Triggers>
                 </Style>
             </DataGrid.RowStyle>
@@ -91,6 +96,7 @@
                 <ContextMenu Name="PrjMenu">
                     <MenuItem Name="PrjNew" Header="Добавить" Click="PrjNew_Click" />
                     <MenuItem Name="PrjDel" Header="Удалить" Click="PrjDel_Click" />
+                    <MenuItem Name="SttDel" Header="Удалить сопоставление" Click="SttDel_Click"/>
                 </ContextMenu>
             </DataGrid.ContextMenu>
         </DataGrid>
