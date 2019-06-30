@@ -19,7 +19,6 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="235"></ColumnDefinition>
-            <!--<ColumnDefinition Width="46*"></ColumnDefinition>-->
             <ColumnDefinition Width="235"/>
             <ColumnDefinition Width="40"></ColumnDefinition>
             <ColumnDefinition Width="249*"></ColumnDefinition>
@@ -30,16 +29,13 @@
             Grid.Column="0"
             Grid.ColumnSpan="5"
             Margin="10,0,10,1" 
-            VerticalAlignment="Bottom"
-            >
+            VerticalAlignment="Bottom">
             <Button
                 Content ="Обновить"  
                 FontSize="16" 
                 VerticalAlignment="Center" 
-                Click="Button_Click"
-            />
+                Click="Button_Click"/>
         </StackPanel>
-        <!--Content="{StaticResource Refresh}"-->
         <DataGrid 
             x:Name="DataGridCtg" 
             HorizontalAlignment="Left" 
@@ -50,13 +46,15 @@
             ItemsSource="{Binding}" 
             AutoGenerateColumns="False" 
             Width="215" 
-            CellEditEnding="DataGridCtg_CellEditEnding" 
             GridLinesVisibility="Horizontal" 
             HorizontalGridLinesBrush="Gray" 
             FontSize="16" 
             CanUserAddRows="False" 
-            MouseUp="DataGridCtg_MouseUp" 
-            KeyUp="DataGridCtg_KeyUp" SelectionMode="Single" MouseLeftButtonUp="DataGridCtg_MouseLeftButtonUp" MouseRightButtonUp="DataGridCtg_MouseRightButtonUp" SelectionChanged="DataGridCtg_SelectionChanged" IsReadOnly="True">
+            SelectionMode="Single"
+            IsReadOnly="True"
+            MouseUp="DataGridCtg_MouseUp"
+            MouseRightButtonUp="DataGridCtg_MouseRightButtonUp" 
+            KeyUp="DataGridCtg_KeyUp">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID" Binding="{Binding ctg_id}" Visibility="Collapsed" />
                 <DataGridTextColumn Header="Категория" Binding="{Binding ctg_nm}" Width="180"/>
@@ -70,7 +68,24 @@
                 </ContextMenu>
             </DataGrid.ContextMenu>
         </DataGrid>
-        <DataGrid x:Name="DataGridPrj" HorizontalAlignment="Left" Margin="20,0,0,0" Grid.Row="3" Grid.Column="1" VerticalAlignment="Top" ItemsSource="{Binding}" AutoGenerateColumns="False" Width="215" GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="Gray" CellEditEnding="DataGridPrj_CellEditEnding" FontSize="16" MouseUp="DataGridPrj_MouseUp" KeyUp="DataGridPrj_KeyUp" SelectionMode="Single" MouseRightButtonUp="DataGridPrj_MouseRightButtonUp" IsReadOnly="True">
+        <DataGrid 
+            x:Name="DataGridPrj" 
+            HorizontalAlignment="Left" 
+            Margin="20,0,0,0" 
+            Grid.Row="3" 
+            Grid.Column="1" 
+            VerticalAlignment="Top" 
+            ItemsSource="{Binding}" 
+            AutoGenerateColumns="False" 
+            Width="215" 
+            GridLinesVisibility="Horizontal" 
+            HorizontalGridLinesBrush="Gray" 
+            FontSize="16" 
+            MouseUp="DataGridPrj_MouseUp" 
+            KeyUp="DataGridPrj_KeyUp" 
+            SelectionMode="Single" 
+            MouseRightButtonUp="DataGridPrj_MouseRightButtonUp" 
+            IsReadOnly="True">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID" Binding="{Binding prj_id}" Visibility="Collapsed" />
                 <DataGridTextColumn Header="Проект" Binding="{Binding prj_nm}"  Width="180" />
@@ -80,16 +95,9 @@
             <DataGrid.RowStyle>
                 <Style TargetType="{x:Type DataGridRow}">
                     <Style.Triggers>
-                        <!--<DataTrigger Binding="{Binding ctg_id}" Value="0" >
-                            <Setter Property="Background" Value="White"></Setter>
-                        </DataTrigger>-->
                         <DataTrigger Binding="{Binding color}" Value="1">
                             <Setter Property="Background" Value="Orange"></Setter>
                         </DataTrigger>
-                        <!--<DataTrigger Binding="{Binding Path=SelectedItems.Count, RelativeSource={RelativeSource AncestorType=DataGrid}}" Value="0">
-                            <Setter Property="ContextMenu" Value="{x:Null}"/>
-                            <Setter Property="Background" Value="Red"/>
-                        </DataTrigger>-->
                     </Style.Triggers>
                 </Style>
             </DataGrid.RowStyle>
@@ -123,7 +131,6 @@
                 <DataGridTextColumn Header="stt_id_to" Binding="{Binding stt_id_to}" Visibility="Collapsed"/>
                 <DataGridTextColumn Header="Куда" Binding="{Binding to}" Width="20*"/>
                 <DataGridTextColumn Header="Сумма" Binding="{Binding csh_sum, StringFormat={}{0:C}}" Width="100"/>
-                <!--<DataGridTextColumn Header="Сумма" Binding="{Binding csh_sum, StringFormat=\{0:N\}}" Width="10*" />-->
                 <DataGridTextColumn Header="План" Binding="{Binding csh_pln}" Width="50"/>
                 <DataGridTextColumn Header="Примечение" Binding="{Binding csh_note}" Width="20*"/>
             </DataGrid.Columns>

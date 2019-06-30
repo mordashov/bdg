@@ -138,34 +138,15 @@ namespace bdg
         {
             _csh.CshSum = TextBoxSum.Text;
         }
+
         private void TextBoxSum_GotFocus(object sender, RoutedEventArgs e)
         {
             if (TextBoxSum.Text == "0.00")
                 TextBoxSum.Text = null;
         }
-        private void DataGridCtg_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
-        {
-            //TextBox newValue = e.EditingElement as TextBox;
-            //string oldValue = db3.CtgText;
-            //if (newValue != null && newValue.Text != oldValue)
-            //{
-            //    string id = ((DataRowView)DataGridCtg.SelectedItem).Row["ctg_id"].ToString();
-            //    string nm = ((DataRowView)DataGridCtg.SelectedItem).Row["ctg_nm"].ToString();
-            //    if (nm == oldValue) nm = newValue.Text;
-            //    //Обновляю в базе
-            //    string sql = $@"
-            //                UPDATE ctg SET ctg_nm = '{nm}'
-            //                WHERE ctg_id = " + id;
-            //    db3.RunSql(sql);
-            //    CshFill();
-            //}
-        }
 
         private void CtgNew_Click(object sender, RoutedEventArgs e)
         {
-            //string sql = "INSERT INTO ctg (ctg_nm) VALUES ('-= Новая строка =-')";
-            //db3.RunSql(sql);
-            //CrtFill();
             new Ctg().Add(DataGridCtg);
         }
 
@@ -187,24 +168,6 @@ namespace bdg
         private void CshDel_Click(object sender, RoutedEventArgs e)
         {
             new Csh().Del(DataGridCsh);
-        }
-
-        private void DataGridPrj_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
-        {
-            //TextBox newValue = e.EditingElement as TextBox;
-            //string oldValue = db3.PrjText;
-            //if (string.IsNullOrEmpty(newValue.Text) && newValue.Text != oldValue)
-            //{
-            //    string id = ((DataRowView)DataGridPrj.SelectedItem).Row["prj_id"].ToString();
-            //    string nm = ((DataRowView)DataGridPrj.SelectedItem).Row["prj_nm"].ToString();
-            //    if (nm == oldValue) nm = newValue.Text;
-            //    //Обновляю в базе
-            //    string sql = $@"
-            //                UPDATE prj SET prj_nm = '{nm}'
-            //                WHERE prj_id = " + id;
-            //    db3.RunSql(sql);
-            //    CshFill();
-            //}
         }
 
         private void CshEdit_Click(object sender, RoutedEventArgs e)
@@ -282,10 +245,6 @@ namespace bdg
             ButtonAdd.IsEnabled = true;
         }
 
-        private void DataGridCtg_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-        }
-
         private void DataGridCtg_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
         {
             DataGrid dataGrid = (DataGrid)sender;
@@ -333,11 +292,6 @@ namespace bdg
             return null;
         }
 
-        private void DataGridCtg_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
-        }
-
         private void DataGridCsh_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             DataGrid dataGrid = (DataGrid)sender;
@@ -355,5 +309,6 @@ namespace bdg
         {
             new Prj(_stt).Edit(DataGridPrj);
         }
+
     }
 }
